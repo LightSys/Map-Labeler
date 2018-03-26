@@ -647,4 +647,35 @@ public class SimplePicture implements DigitalPicture
         return output;
     }
 
+    public double getScore(int x, int y, int width, int height)
+    {
+        int points = 0;
+        points += getPointsForCenter(x, y);
+        points += getPointsForNoise(x,y,width,height);
+        return points;
+    }
+
+    private double getPointsForCenter(int x, int y)
+    {
+        int picXCenter = getWidth()/2;
+        int picYCenter = getHeight()/2;
+        int xDistance = picXCenter - x;
+        int yDistance = picYCenter - y;
+        return Math.sqrt(xDistance*xDistance+yDistance*yDistance);
+    }
+
+    private double getPointsForNoise(int x, int y, int width, int height)
+    {
+        double score = 0.0;
+        for (int i = 0; i < width-1; i++) {
+            for (int j = 0; j < height-1; j++) {
+                Pixel p = getPixel(x+i, y+j);
+                Pixel pLeft = getPixel(x+i+1, y+j);
+                Pixel pDown = getPixel(x+i, y+j+1);
+                score -= p.colorDistance(pLeft.getColor());
+                score -= p.colorDistance(pDown.getColor());
+            }
+        }
+        return score;
+    }
 } // end of SimplePicture class
