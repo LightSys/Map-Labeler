@@ -14,12 +14,12 @@ public class LabelerMain {
         String filename = args[0];
         System.out.println("Opening " + filename);
 
-        // open file
+        // 1 open file
         Picture mypic = new Picture(filename);
 
-        Font myFont = new Font("Rockwell Extra Bold", Font.BOLD,16);
+        Font myFont = new Font("Times New Roman", Font.BOLD,16);
 
-        // find best box
+        // 2 find best box
         int origW = mypic.getDisplayWidth(args[1], myFont);
         int origH = 16;
         int w = (int) (X_PAD_SCALE * origW);
@@ -41,23 +41,27 @@ public class LabelerMain {
             }
         }
 
-        // edit image
-        /*
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                mypic.getPixel(bestX+i,bestY+j).setBlue(0);
-                mypic.getPixel(bestX+i,bestY+j).setRed(255);
-                mypic.getPixel(bestX+i,bestY+j).setGreen(0);
-            }
-        }
-        */
+        // 3 edit image
+
+        //drawBox(mypic, x, y, w, h);
+
         int xStrPadding = (w - origW)/2;
         int yStrPadding = (h - origH)/2;
 
         mypic.drawString(args[1], myFont, bestX + xStrPadding, bestY + yStrPadding);
 
-        // write to new file
+        // 4 write to new file
         mypic.write("D:\\git\\Map-Labeler\\out.gif");
         System.out.println("done?");
+    }
+
+    private static void drawBox(Picture pic, int x, int y, int w, int h) {
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                pic.getPixel(x+i,y+j).setBlue(0);
+                pic.getPixel(x+i,y+j).setRed(255);
+                pic.getPixel(x+i,y+j).setGreen(0);
+            }
+        }
     }
 }
