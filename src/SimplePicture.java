@@ -442,7 +442,7 @@ public class SimplePicture implements DigitalPicture
      */
     public void drawString(String text, int xPos, int yPos)
     {
-        addMessage(text,xPos,yPos);
+        addMessage(text,xPos,yPos + 16);
     }
 
     /**
