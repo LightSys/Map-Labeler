@@ -1,230 +1,254 @@
-
-
 import java.awt.*;
-import java.awt.font.*;
-import java.awt.geom.*;
 import java.awt.image.BufferedImage;
-import java.text.*;
-import java.util.*;
-import java.util.List; // resolves problem with java.awt.List and java.util.List
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.awt.geom.*;
 
-/**
- * A class that represents a picture.  This class inherits from
- * SimplePicture and allows the student to add functionality to
- * the Picture class.
- *
- * @author Barbara Ericson ericson@cc.gatech.edu
- */
-public class Picture extends SimplePicture
+public class Picture
 {
-    ///////////////////// constructors //////////////////////////////////
+    private String fileName;
+    private BufferedImage bufferedImage;
+    private String extension;
 
-    /**
-     * Constructor that takes no arguments
-     */
-    public Picture ()
-    {
-    /* not needed but use it to show students the implicit call to super()
-     * child constructors always call a parent constructor
-     */
-        super();
-    }
-
-    /**
-     * Constructor that takes a file name and creates the picture
-     * @param fileName the name of the file to create the picture from
-     */
     public Picture(String fileName)
     {
-        // let the parent class handle this fileName
-        super(fileName);
+        load(fileName);
     }
 
+    public BufferedImage getBufferedImage() { return bufferedImage; }
+    public String getFileName() { return fileName; }
+    public int getWidth() { return bufferedImage.getWidth();}
+    public int getHeight() { return bufferedImage.getHeight(); }
+
     /**
-     * Constructor that takes the width and height
-     * @param height the height of the desired picture
-     * @param width the width of the desired picture
+     * Method to return the pixel value as an int for the given x and y location
+     * @param x the x coordinate of the pixel
+     * @param y the y coordinate of the pixel
+     * @return the pixel value as an integer (alpha, red, green, blue)
      */
-    public Picture(int height, int width)
+    public int getBasicPixel(int x, int y)
     {
-        // let the parent class handle this width and height
-        super(width,height);
+        return bufferedImage.getRGB(x,y);
     }
 
     /**
-     * Constructor that takes a picture and creates a
-     * copy of that picture
-     * @param copyPicture the picture to copy
+     * Method to set the value of a pixel in the picture from an int
+     * @param x the x coordinate of the pixel
+     * @param y the y coordinate of the pixel
+     * @param rgb the new rgb value of the pixel (alpha, red, green, blue)
      */
-    public Picture(Picture copyPicture)
+    public void setBasicPixel(int x, int y, int rgb)
     {
-        // let the parent class do the copy
-        super(copyPicture);
+        bufferedImage.setRGB(x,y,rgb);
     }
 
     /**
-     * Constructor that takes a buffered image
-     * @param image the buffered image to use
+     * Method to get a pixel object for the given x and y location
+     * @param x  the x location of the pixel in the picture
+     * @param y  the y location of the pixel in the picture
+     * @return a Pixel object for this location
      */
-    public Picture(BufferedImage image)
+    public Pixel getPixel(int x, int y)
     {
-        super(image);
+        // create the pixel object for this picture and the given x and y location
+        Pixel pixel = new Pixel(this,x,y);
+        return pixel;
     }
 
-    ////////////////////// methods ///////////////////////////////////////
+    /**
+     * Method to load the picture from the passed file name
+     * @param fileName the file name to use to load the picture from
+     * @throws IOException if the picture isn't found
+     */
+    public void loadOrFail(String fileName) throws IOException
+    {
+        // set the current picture's file name
+        this.fileName = fileName;
+
+        // set the extension
+        int posDot = fileName.indexOf('.');
+        if (posDot >= 0)
+            this.extension = fileName.substring(posDot + 1);
+
+        File file = new File(this.fileName);
+
+        if (!file.canRead())
+        {
+            // try adding the media path
+            file = new File(FileChooser.getMediaPath(this.fileName));
+            if (!file.canRead())
+            {
+                throw new IOException(this.fileName +
+                        " could not be opened. Check that you specified the path");
+            }
+        }
+
+        bufferedImage = ImageIO.read(file);
+    }
+    /**
+     * Method to read the contents of the picture from a filename
+     * without throwing errors
+     * @param fileName the name of the file to write the picture to
+     * @return true if success else false
+     */
+    public boolean load(String fileName)
+    {
+        try {
+            this.loadOrFail(fileName);
+            return true;
+
+        } catch (Exception ex) {
+            System.out.println("There was an error trying to open " + fileName);
+            bufferedImage = new BufferedImage(600,200,
+                    BufferedImage.TYPE_INT_RGB);
+            addMessage("Couldn't load " + fileName, new Font("Helvetica",Font.BOLD,16),5,100);
+            return false;
+        }
+    }
 
     /**
-     * Method to return a string with information about this picture.
-     * @return a string with information about the picture such as fileName,
-     * height and width.
+     * Method to draw a message as a string on the buffered image
+     * @param message the message to draw on the buffered image
+     * @param font the font of the message to draw
+     * @param xPos  the x coordinate of the leftmost point of the string
+     * @param yPos  the y coordinate of the bottom of the string
+     */
+    public void addMessage(String message, Font font, int xPos, int yPos)
+    {
+        // get a graphics context to use to draw on the buffered image
+        Graphics2D graphics2d = bufferedImage.createGraphics();
+
+        // set the color to white
+        graphics2d.setPaint(Color.black);
+
+        graphics2d.setFont(font);
+
+        // draw the message
+        graphics2d.drawString(message,xPos,yPos);
+
+    }
+
+    /**
+     * Method to draw a string at the given location on the picture
+     * @param text the text to draw
+     * @param xPos the left x for the text
+     * @param yPos the top y for the text
+     */
+    public void drawString(String text, Font font, int xPos, int yPos)
+    {
+        addMessage(text,font, xPos,yPos + font.getSize());
+    }
+
+    /**
+     * Method to get the width of a string to be drawn
+     * @param text the text to measure
+     * @param font the font to measure
+     */
+    public int getDisplayWidth(String text, Font font)
+    {
+        Graphics2D graphics2d = bufferedImage.createGraphics();
+        graphics2d.setFont(font);
+        int width = graphics2d.getFontMetrics().stringWidth(text);
+        return width;
+    }
+
+    /**
+     * Method to write the contents of the picture to a file with
+     * the passed name
+     * @param fileName the name of the file to write the picture to
+     */
+    public void writeOrFail(String fileName) throws IOException
+    {
+        String extension = this.extension; // the default is current
+
+        // create the file object
+        File file = new File(fileName);
+        File fileLoc = file.getParentFile(); // directory name
+
+        // if there is no parent directory use the current media dir
+        if (fileLoc == null)
+        {
+            fileName = FileChooser.getMediaPath(fileName);
+            file = new File(fileName);
+            fileLoc = file.getParentFile();
+        }
+
+        // check that you can write to the directory
+        if (!fileLoc.canWrite()) {
+            throw new IOException(fileName +
+                    " could not be opened. Check to see if you can write to the directory.");
+        }
+
+        // get the extension
+        int posDot = fileName.indexOf('.');
+        if (posDot >= 0)
+            extension = fileName.substring(posDot + 1);
+
+        // write the contents of the buffered image to the file
+        ImageIO.write(bufferedImage, extension, file);
+
+    }
+
+    /**
+     * Method to write the contents of the picture to a file with
+     * the passed name without throwing errors
+     * @param fileName the name of the file to write the picture to
+     * @return true if success else false
+     */
+    public boolean write(String fileName)
+    {
+        try {
+            this.writeOrFail(fileName);
+            return true;
+        } catch (Exception ex) {
+            System.out.println("There was an error trying to write " + fileName);
+            ex.printStackTrace();
+            return false;
+        }
+
+    }
+
+    /**
+     * Method to return a string with information about this picture
+     * @return a string with information about the picture
      */
     public String toString()
     {
-        String output = "Picture, filename " + getFileName() +
-                " height " + getHeight()
-                + " width " + getWidth();
+        String output = "Simple Picture, filename " + fileName +
+                " height " + getHeight() + " width " + getWidth();
         return output;
-
     }
 
-    /** Method to set the blue to 0 */
-    public void zeroBlue()
+    public double getScore(int x, int y, int width, int height)
     {
-        Pixel[][] pixels = this.getPixels2D();
-        for (Pixel[] rowArray : pixels)
-        {
-            for (Pixel pixelObj : rowArray)
-            {
-                pixelObj.setBlue(0);
+        int points = 0;
+        points += getPointsForCenter(x, y, width, height);
+        points += getPointsForNoise(x,y,width,height);
+        return points;
+    }
+
+    private double getPointsForCenter(int x, int y, int width, int height)
+    {
+        int picXCenter = getWidth()/2;
+        int picYCenter = getHeight()/2;
+        int xDistance = picXCenter - (x + width/2);
+        int yDistance = picYCenter - (y + height/2);
+        return -Math.sqrt(xDistance*xDistance+yDistance*yDistance);
+    }
+
+    private double getPointsForNoise(int x, int y, int width, int height)
+    {
+        double score = 0.0;
+        for (int i = 0; i < width-1; i++) {
+            for (int j = 0; j < height-1; j++) {
+                Pixel p = getPixel(x+i, y+j);
+                Pixel pLeft = getPixel(x+i+1, y+j);
+                Pixel pDown = getPixel(x+i, y+j+1);
+                score -= p.colorDistance(pLeft.getColor());
+                score -= p.colorDistance(pDown.getColor());
             }
         }
+        return score;
     }
-
-    /** Method that mirrors the picture around a
-     * vertical mirror in the center of the picture
-     * from left to right */
-    public void mirrorVertical()
-    {
-        Pixel[][] pixels = this.getPixels2D();
-        Pixel leftPixel = null;
-        Pixel rightPixel = null;
-        int width = pixels[0].length;
-        for (int row = 0; row < pixels.length; row++)
-        {
-            for (int col = 0; col < width / 2; col++)
-            {
-                leftPixel = pixels[row][col];
-                rightPixel = pixels[row][width - 1 - col];
-                rightPixel.setColor(leftPixel.getColor());
-            }
-        }
-    }
-
-    /** Mirror just part of a picture of a temple */
-    public void mirrorTemple()
-    {
-        int mirrorPoint = 276;
-        Pixel leftPixel = null;
-        Pixel rightPixel = null;
-        int count = 0;
-        Pixel[][] pixels = this.getPixels2D();
-
-        // loop through the rows
-        for (int row = 27; row < 97; row++)
-        {
-            // loop from 13 to just before the mirror point
-            for (int col = 13; col < mirrorPoint; col++)
-            {
-
-                leftPixel = pixels[row][col];
-                rightPixel = pixels[row]
-                        [mirrorPoint - col + mirrorPoint];
-                rightPixel.setColor(leftPixel.getColor());
-            }
-        }
-    }
-
-    /** copy from the passed fromPic to the
-     * specified startRow and startCol in the
-     * current picture
-     * @param fromPic the picture to copy from
-     * @param startRow the start row to copy to
-     * @param startCol the start col to copy to
-     */
-    public void copy(Picture fromPic,
-                     int startRow, int startCol)
-    {
-        Pixel fromPixel = null;
-        Pixel toPixel = null;
-        Pixel[][] toPixels = this.getPixels2D();
-        Pixel[][] fromPixels = fromPic.getPixels2D();
-        for (int fromRow = 0, toRow = startRow;
-             fromRow < fromPixels.length &&
-                     toRow < toPixels.length;
-             fromRow++, toRow++)
-        {
-            for (int fromCol = 0, toCol = startCol;
-                 fromCol < fromPixels[0].length &&
-                         toCol < toPixels[0].length;
-                 fromCol++, toCol++)
-            {
-                fromPixel = fromPixels[fromRow][fromCol];
-                toPixel = toPixels[toRow][toCol];
-                toPixel.setColor(fromPixel.getColor());
-            }
-        }
-    }
-
-    /** Method to create a collage of several pictures */
-    public void createCollage()
-    {
-        Picture flower1 = new Picture("flower1.jpg");
-        Picture flower2 = new Picture("flower2.jpg");
-        this.copy(flower1,0,0);
-        this.copy(flower2,100,0);
-        this.copy(flower1,200,0);
-        Picture flowerNoBlue = new Picture(flower2);
-        flowerNoBlue.zeroBlue();
-        this.copy(flowerNoBlue,300,0);
-        this.copy(flower1,400,0);
-        this.copy(flower2,500,0);
-        this.mirrorVertical();
-        this.write("collage.jpg");
-    }
-
-
-    /** Method to show large changes in color
-     * @param edgeDist the distance for finding edges
-     */
-    public void edgeDetection(int edgeDist)
-    {
-        Pixel leftPixel = null;
-        Pixel rightPixel = null;
-        Pixel[][] pixels = this.getPixels2D();
-        Color rightColor = null;
-        for (int row = 0; row < pixels.length; row++)
-        {
-            for (int col = 0;
-                 col < pixels[0].length-1; col++)
-            {
-                leftPixel = pixels[row][col];
-                rightPixel = pixels[row][col+1];
-                rightColor = rightPixel.getColor();
-                if (leftPixel.colorDistance(rightColor) >
-                        edgeDist)
-                    leftPixel.setColor(Color.BLACK);
-                else
-                    leftPixel.setColor(Color.WHITE);
-            }
-        }
-    }
-
-
-    /* Main method for testing - each class in Java can have a main
-     * method
-     */
-    public static void main(String[] args)
-    {
-    }
-
-} // this } is the end of class Picture, put all new methods before this
+}

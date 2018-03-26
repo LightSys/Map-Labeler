@@ -19,7 +19,7 @@ public class Pixel
     ////////////////////////// fields ///////////////////////////////////
 
     /** the digital picture this pixel belongs to */
-    private DigitalPicture picture;
+    private Picture picture;
 
     /** the x (column) location of this pixel in the picture; (0,0) is top left */
     private int x;
@@ -36,7 +36,7 @@ public class Pixel
      * @param x the x location of the pixel in the picture
      * @param y the y location of the pixel in the picture
      */
-    public Pixel(DigitalPicture picture, int x, int y)
+    public Pixel(Picture picture, int x, int y)
     {
         // set the picture
         this.picture = picture;
