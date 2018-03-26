@@ -395,7 +395,7 @@ public class SimplePicture implements DigitalPicture
             System.out.println("There was an error trying to open " + fileName);
             bufferedImage = new BufferedImage(600,200,
                     BufferedImage.TYPE_INT_RGB);
-            addMessage("Couldn't load " + fileName,5,100);
+            addMessage("Couldn't load " + fileName, new Font("Helvetica",Font.BOLD,16),5,100);
             return false;
         }
 
@@ -415,10 +415,11 @@ public class SimplePicture implements DigitalPicture
     /**
      * Method to draw a message as a string on the buffered image
      * @param message the message to draw on the buffered image
+     * @param font the font of the message to draw
      * @param xPos  the x coordinate of the leftmost point of the string
      * @param yPos  the y coordinate of the bottom of the string
      */
-    public void addMessage(String message, int xPos, int yPos)
+    public void addMessage(String message, Font font, int xPos, int yPos)
     {
         // get a graphics context to use to draw on the buffered image
         Graphics2D graphics2d = bufferedImage.createGraphics();
@@ -426,8 +427,7 @@ public class SimplePicture implements DigitalPicture
         // set the color to white
         graphics2d.setPaint(Color.black);
 
-        // set the font to Helvetica bold style and size 16
-        graphics2d.setFont(new Font("Helvetica",Font.BOLD,16));
+        graphics2d.setFont(font);
 
         // draw the message
         graphics2d.drawString(message,xPos,yPos);
@@ -440,19 +440,20 @@ public class SimplePicture implements DigitalPicture
      * @param xPos the left x for the text
      * @param yPos the top y for the text
      */
-    public void drawString(String text, int xPos, int yPos)
+    public void drawString(String text, Font font, int xPos, int yPos)
     {
-        addMessage(text,xPos,yPos + 16);
+        addMessage(text,font, xPos,yPos + font.getSize());
     }
 
     /**
      * Method to get the width of a string to be drawn
-     * @param text the text to draw
+     * @param text the text to measure
+     * @param font the font to measure
      */
-    public int getDisplayWidth(String text)
+    public int getDisplayWidth(String text, Font font)
     {
         Graphics2D graphics2d = bufferedImage.createGraphics();
-        graphics2d.setFont(new Font("Helvetica",Font.BOLD,16));
+        graphics2d.setFont(font);
         int width = graphics2d.getFontMetrics().stringWidth(text);
         return width;
     }
@@ -650,18 +651,18 @@ public class SimplePicture implements DigitalPicture
     public double getScore(int x, int y, int width, int height)
     {
         int points = 0;
-        points += getPointsForCenter(x, y);
+        points += getPointsForCenter(x, y, width, height);
         points += getPointsForNoise(x,y,width,height);
         return points;
     }
 
-    private double getPointsForCenter(int x, int y)
+    private double getPointsForCenter(int x, int y, int width, int height)
     {
         int picXCenter = getWidth()/2;
         int picYCenter = getHeight()/2;
-        int xDistance = picXCenter - x;
-        int yDistance = picYCenter - y;
-        return Math.sqrt(xDistance*xDistance+yDistance*yDistance);
+        int xDistance = picXCenter - (x + width/2);
+        int yDistance = picYCenter - (y + height/2);
+        return -Math.sqrt(xDistance*xDistance+yDistance*yDistance);
     }
 
     private double getPointsForNoise(int x, int y, int width, int height)
