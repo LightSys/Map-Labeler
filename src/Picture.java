@@ -77,6 +77,18 @@ public class Picture
     }
 
     /**
+     * Method to get a pixel object for the given x and y location
+     * @param p the position of the pixel in the picture
+     * @return a Pixel object for this location
+     */
+    public Pixel getPixel(Point p)
+    {
+        // create the pixel object for this picture and the given x and y location
+        Pixel pixel = new Pixel(this, p.getX(), p.getY());
+        return pixel;
+    }
+
+    /**
      * Method to load the picture from the passed file name
      * @param fileName the file name to use to load the picture from
      * @throws IOException if the picture isn't found
@@ -251,8 +263,7 @@ public class Picture
         return points;
     }
 
-    private double getPointsForCenter(int x, int y, int width, int height)
-    {
+    private double getPointsForCenter(int x, int y, int width, int height) {
         int picXCenter = getWidth()/2;
         int picYCenter = getHeight()/2;
         int xDistance = picXCenter - (x + width/2);
@@ -260,8 +271,7 @@ public class Picture
         return -Math.sqrt(xDistance*xDistance+yDistance*yDistance);
     }
 
-    private double getPointsForNoise(int x, int y, int width, int height)
-    {
+    private double getPointsForNoise(int x, int y, int width, int height) {
         double score = 0.0;
         for (int i = 0; i < width-1; i++) {
             for (int j = 0; j < height-1; j++) {
@@ -276,19 +286,23 @@ public class Picture
     }
 
     public Point getBestBoxPosition(int w, int h) {
-        double score = getScore(0, 0, w, h);
-        int bestX = 0;
-        int bestY = 0;
-        for (int y = 0; y < getHeight() - h; y++) {
-            for (int x = 0; x < getWidth() - w; x++) {
-                double newScore = getScore(x, y, w, h);
-                if (newScore > score) {
-                    score = newScore;
-                    bestX = x;
-                    bestY = y;
-                }
-            }
-        }
-        return new Point(bestX, bestY);
+        NoiseBoxes noiseBoxes = new NoiseBoxes(this, w, h);
+
+//        double score = getScore(0, 0, w, h);
+//        int bestX = 0;
+//        int bestY = 0;
+//        for (int y = 0; y < getHeight() - h; y++) {
+//            for (int x = 0; x < getWidth() - w; x++) {
+//                double newScore = getScore(x, y, w, h);
+//                if (newScore > score) {
+//                    score = newScore;
+//                    bestX = x;
+//                    bestY = y;
+//                }
+//            }
+//        }
+//        return new Point(bestX, bestY);
+
+        return noiseBoxes.getBestBoxLocation();
     }
 }
