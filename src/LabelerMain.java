@@ -26,8 +26,8 @@ public class LabelerMain {
 
     private static void setOptions(String[] args){
         Options.outputFile = "out.gif";
-        Options.newLine = false;
-        Options.padXScale = 1.5;
+        Options.newLine = true;
+        Options.padXScale = 1.2;
         Options.padYScale = 1.5;
     }
 }
