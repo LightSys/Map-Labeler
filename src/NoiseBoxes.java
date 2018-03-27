@@ -2,9 +2,8 @@
  * Created by Edric on 3/27/2018.
  */
 public class NoiseBoxes {
-    NoisePixel[][] nPixels;
+    NoisePoint[][] nPixels;
     Double[][] boxNoise;
-
     private Point center;
 
     private int w;
@@ -16,10 +15,10 @@ public class NoiseBoxes {
 
         int pw = pic.getWidth();
         int ph = pic.getHeight();
-        nPixels = new NoisePixel[ph][pw];
+        nPixels = new NoisePoint[ph][pw];
         for (int y = 0; y < ph; y++){
             for (int x = 0; x < pw; x++){
-                nPixels[y][x] = new NoisePixel(new Point(x, y), pic);
+                nPixels[y][x] = new NoisePoint(new Point(x, y), pic);
             }
         }
 
@@ -97,7 +96,7 @@ public class NoiseBoxes {
     private double getVerticalScore(int x, int y, int h) {
         double score = 0.0;
         for (int i = y; i < y+h; i++) {
-            score += nPixels[i][x].getNoise();
+            score += nPixels[i][x].getScore();
         }
         return score;
     }
@@ -105,7 +104,7 @@ public class NoiseBoxes {
     private double getHorizontalScore(int x, int y, int w) {
         double score = 0.0;
         for (int i = x; i < x+w; i++) {
-            score += nPixels[y][i].getNoise();
+            score += nPixels[y][i].getScore();
         }
         return score;
     }
