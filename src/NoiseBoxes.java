@@ -47,7 +47,19 @@ public class NoiseBoxes {
         return loc;
     }
 
-    public double getBoxScore(int x, int y) {
+    //higher scores are better
+    private double getBoxScore(int x, int y) {
+        double score = 0.0;
+        score += getScoreForNoise(x, y);
+        score += getScoreForCenterDist(x, y);
+        return score;
+    }
+
+    public double getBoxScore(Point p) {
+        return getBoxScore(p.getX(), p.getY());
+    }
+
+    private double getScoreForNoise(int x, int y) {
         double noise = 0.0;
         if (boxNoise[y][x] != null) {
             return boxNoise[y][x];
@@ -79,13 +91,7 @@ public class NoiseBoxes {
             }
         }
         boxNoise[y][x] = noise;
-        double score = -noise + getScoreForCenterDist(x, y);
-
-        return score;
-    }
-
-    public double getBoxScore(Point p) {
-        return getBoxScore(p.getX(), p.getY());
+        return -noise;
     }
 
     private double getVerticalScore(int x, int y, int h) {
