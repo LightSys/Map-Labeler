@@ -96,7 +96,9 @@ public class Picture
         if (!file.canRead())
         {
             // try adding the media path
-            file = new File(FileChooser.getMediaPath(this.fileName));
+            String path = System.getProperty("user.dir") + "\\" + this.fileName;
+
+            file = new File(path);
             if (!file.canRead())
             {
                 throw new IOException(this.fileName +
@@ -189,8 +191,9 @@ public class Picture
         // if there is no parent directory use the current media dir
         if (fileLoc == null)
         {
-            fileName = FileChooser.getMediaPath(fileName);
-            file = new File(fileName);
+            // try adding the media path
+            String path = System.getProperty("user.dir") + "\\" + fileName;
+            file = new File(path);
             fileLoc = file.getParentFile();
         }
 
