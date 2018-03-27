@@ -265,8 +265,9 @@ public class Picture
         return noiseBoxes.getBestBoxLocation();
     }
 
-   public boolean writeLabel(String text){
+   public boolean writeLabel(){
        Font font = Options.font;
+       String text = Options.text;
 
        int origW = getDisplayWidth(text, font);
        int origH = font.getSize();
