@@ -2,3 +2,5 @@
 factbook/
 *.iml
 *.xml
+out/
+*.gif
