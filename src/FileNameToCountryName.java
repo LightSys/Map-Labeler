@@ -14,7 +14,7 @@ For example the file name "al-map.gif" would return "ALBANIA"
  */
 public class FileNameToCountryName {
     private static void createCSV( ZipFile factbook) throws IOException {
-        ArrayList<String> filenameToCountryName = new ArrayList<String>();
+        ArrayList<String> filenameToCountryName = new ArrayList<>();
         try {
             Enumeration entries = factbook.entries();
             BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
@@ -81,7 +81,7 @@ public class FileNameToCountryName {
             }
         }
     }
-    public static void extractFile(String fileName, String zipPath) throws Exception{
+    private static void extractFile(String fileName, String zipPath) throws Exception{
         // remove all the directory information from name and put it in maps
         String newFileName = fileName.replaceAll(".*/","maps/");
         //check if file already exists!
@@ -95,7 +95,7 @@ public class FileNameToCountryName {
         FileInputStream fileInputStream = new FileInputStream(zipPath);
         BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream );
         ZipInputStream zin = new ZipInputStream(bufferedInputStream);
-        ZipEntry ze = null;
+        ZipEntry ze;
         while ((ze = zin.getNextEntry()) != null) {
             if (ze.getName().equals(fileName)) {
                 byte[] buffer = new byte[9000];
@@ -110,7 +110,7 @@ public class FileNameToCountryName {
         zin.close();
         System.out.println("Map extracted: " + newFileName);
     }
-    public static void unzipMaps(ZipFile factbook) throws Exception {
+    private static void unzipMaps(ZipFile factbook) throws Exception {
         System.out.println("List of Map Names Entered");
         System.out.println("path name: " + factbook.getName());
         System.out.println("size: " + factbook.size());
@@ -137,7 +137,7 @@ public class FileNameToCountryName {
         System.out.println("Number of Map images: " + numMaps);
     }
 
-    public static void createMapzip() throws IOException {
+    private static void createMapzip() {
         //create new mapZip file
 
         //iterate through maps and add each to zip
@@ -146,6 +146,12 @@ public class FileNameToCountryName {
     }
 
     public static void main(String[] args) throws Exception {
+        //check File
+        if(args.length == 0){
+            System.out.println("No File was given!");
+            System.out.println("Please input location of factbook.zip");
+            return;
+        }
         // Print Input
         System.out.println("Input: " + args[0]);
         // Declare factbook as the input given for the factbook zip
