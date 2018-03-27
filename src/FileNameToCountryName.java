@@ -161,8 +161,32 @@ public class FileNameToCountryName {
         // Get the maps from the factbook and unzip them to /maps
         unzipMaps(factbook);
         //make csv for XX-map.gif -> country name
-        createCSV(factbook);
+//        createCSV(factbook);
+        //todo test CSV with extracted Maps :)
+        testCSV();
         //todo zip up maps
         createMapzip();
+    }
+
+    private static void testCSV() {
+        //list files in maps/
+        ArrayList mapsWithoutNames = new ArrayList<String>();
+        final File folder = new File("maps/");
+        for (final File fileEntry : folder.listFiles()) {
+            mapsWithoutNames.add(fileEntry.getName());
+            System.out.println(fileEntry.getName());
+        }
+        //read csv
+        try {
+            BufferedReader in = new BufferedReader(new FileReader("maps.csv"));
+            String line;
+
+            while ((line = in.readLine()) != null) {
+                //todo parse this line and then check if it is contained in the csv
+                System.out.println(line);
+            }
+            System.out.println(line);
+        } catch (IOException e) {
+        }
     }
 }
