@@ -31,7 +31,7 @@ public class NoiseBoxes {
         this.center = p;
     }
 
-    public Point getBestBoxLocation() {
+    public ScorePoint getBestBoxLocation() {
         Double best = null;
         Point loc = null;
         for (int y = 0; y < boxNoise.length; y++) {
@@ -43,7 +43,7 @@ public class NoiseBoxes {
                 }
             }
         }
-        return loc;
+        return new ScorePoint(loc, best);
     }
 
     //higher scores are better

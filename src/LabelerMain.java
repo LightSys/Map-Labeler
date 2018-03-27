@@ -25,16 +25,18 @@ public class LabelerMain {
         int origH = 16;
         int w = (int) (X_PAD_SCALE * origW);
         int h = (int) (Y_PAD_SCALE * origH);
-        Point p = mypic.getBestBoxPosition(w, h);
+        ScorePoint sp = mypic.getBestBoxPosition(w, h);
 
         // 3 edit image
 
-        //drawBox(mypic, x, y, w, h);
+        //drawBox(mypic, sp.getP().getX(), sp.getP().getY(), w, h);
 
         int xStrPadding = (w - origW)/2;
         int yStrPadding = (h - origH)/2;
+        int drawX = sp.getP().getX() + xStrPadding;
+        int drawY = sp.getP().getY() + yStrPadding;
 
-        mypic.drawString(args[1], myFont, p.getX() + xStrPadding, p.getY() + yStrPadding);
+        mypic.drawString(args[1], myFont, drawX, drawY);
 
         // 4 write to new file
         mypic.write("out.gif");

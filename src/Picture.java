@@ -285,24 +285,8 @@ public class Picture
         return score;
     }
 
-    public Point getBestBoxPosition(int w, int h) {
+    public ScorePoint getBestBoxPosition(int w, int h) {
         NoiseBoxes noiseBoxes = new NoiseBoxes(this, w, h);
-
-//        double score = getScore(0, 0, w, h);
-//        int bestX = 0;
-//        int bestY = 0;
-//        for (int y = 0; y < getHeight() - h; y++) {
-//            for (int x = 0; x < getWidth() - w; x++) {
-//                double newScore = getScore(x, y, w, h);
-//                if (newScore > score) {
-//                    score = newScore;
-//                    bestX = x;
-//                    bestY = y;
-//                }
-//            }
-//        }
-//        return new Point(bestX, bestY);
-
         return noiseBoxes.getBestBoxLocation();
     }
 }
