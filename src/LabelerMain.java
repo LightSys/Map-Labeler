@@ -18,28 +18,38 @@ public class LabelerMain {
         // 1 open file
         Picture mypic = new Picture(filename);
 
+        // choose font
         Font myFont = new Font("Times New Roman", Font.BOLD,16);
 
+        // write label
+        String text = args[1];
+        Font font = myFont;
+        String outputFileName = "out.gif";
+        mypic.writeLabel(text, font, outputFileName, X_PAD_SCALE, Y_PAD_SCALE);
+
+        /*
         // 2 find best box
         int origW = mypic.getDisplayWidth(args[1], myFont);
         int origH = 16;
         int w = (int) (X_PAD_SCALE * origW);
         int h = (int) (Y_PAD_SCALE * origH);
+
+
         ScorePoint sp = mypic.getBestBoxPosition(w, h);
+
 
         // 3 edit image
 
         //drawBox(mypic, sp.getP().getX(), sp.getP().getY(), w, h);
 
-        int xStrPadding = (w - origW)/2;
-        int yStrPadding = (h - origH)/2;
-        int drawX = sp.getP().getX() + xStrPadding;
-        int drawY = sp.getP().getY() + yStrPadding;
+        int drawX = sp.getP().getX() + w/2;
+        int drawY = sp.getP().getY() + h/2;
 
         mypic.drawString(args[1], myFont, drawX, drawY);
 
         // 4 write to new file
-        mypic.write("out.gif");
+        mypic.write("out2.gif");
+        */
         System.out.println("done?");
     }
 
@@ -52,5 +62,7 @@ public class LabelerMain {
             }
         }
     }
+
+
 
 }

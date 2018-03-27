@@ -171,7 +171,8 @@ public class Picture
      */
     public void drawString(String text, Font font, int xPos, int yPos)
     {
-        addMessage(text,font, xPos,yPos + font.getSize());
+        int w = getDisplayWidth(text, font);
+        addMessage(text,font, xPos-w/2,yPos + font.getSize()/2);
     }
 
     /**
@@ -255,38 +256,43 @@ public class Picture
         return output;
     }
 
-    public double getScore(int x, int y, int width, int height)
-    {
-        int points = 0;
-        points += getPointsForCenter(x, y, width, height);
-        points += getPointsForNoise(x,y,width,height);
-        return points;
-    }
-
-    private double getPointsForCenter(int x, int y, int width, int height) {
-        int picXCenter = getWidth()/2;
-        int picYCenter = getHeight()/2;
-        int xDistance = picXCenter - (x + width/2);
-        int yDistance = picYCenter - (y + height/2);
-        return -Math.sqrt(xDistance*xDistance+yDistance*yDistance);
-    }
-
-    private double getPointsForNoise(int x, int y, int width, int height) {
-        double score = 0.0;
-        for (int i = 0; i < width-1; i++) {
-            for (int j = 0; j < height-1; j++) {
-                Pixel p = getPixel(x+i, y+j);
-                Pixel pLeft = getPixel(x+i+1, y+j);
-                Pixel pDown = getPixel(x+i, y+j+1);
-                score -= p.colorDistance(pLeft.getColor());
-                score -= p.colorDistance(pDown.getColor());
-            }
-        }
-        return score;
-    }
-
+    /**
+     * Method to return the top left corner of the label position
+     * @return a ScorePoint with top left corner of the label position and the score
+     */
     public ScorePoint getBestBoxPosition(int w, int h) {
         NoiseBoxes noiseBoxes = new NoiseBoxes(this, w, h);
         return noiseBoxes.getBestBoxLocation();
     }
+
+   public boolean writeLabel(String text, Font font, String outFile, double padXScale, double padYScale){
+       int origW = getDisplayWidth(text, font);
+       int origH = font.getSize();
+       int w = (int) (padXScale * origW);
+       int h = (int) (padYScale * origH);
+
+
+       ScorePoint sp = getBestBoxPosition(w, h);
+       int drawX = sp.getP().getX() + w/2;
+       int drawY = sp.getP().getY() + h/2;
+//       drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
+       drawString(text, font, drawX, drawY);
+
+
+
+       write(outFile);
+
+       return true;
+   }
+
+    private void drawBox(int x, int y, int w, int h) {
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                getPixel(x+i,y+j).setBlue(0);
+                getPixel(x+i,y+j).setRed(255);
+                getPixel(x+i,y+j).setGreen(0);
+            }
+        }
+    }
+
 }
