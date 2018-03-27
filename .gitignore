@@ -2,3 +2,4 @@
 factbook/
 *.iml
 *.xml
+out/
