@@ -1,6 +1,7 @@
 /**
  * Created by Edric on 3/27/2018.
  */
+//TODO renameme pleaseeee; thx
 public class NoiseBoxes {
     NoisePoint[][] nPixels;
     Double[][] boxNoise;

@@ -265,11 +265,13 @@ public class Picture
         return noiseBoxes.getBestBoxLocation();
     }
 
-   public boolean writeLabel(String text, Font font, String outFile, double padXScale, double padYScale){
+   public boolean writeLabel(String text){
+       Font font = Options.font;
+
        int origW = getDisplayWidth(text, font);
        int origH = font.getSize();
-       int w = (int) (padXScale * origW);
-       int h = (int) (padYScale * origH);
+       int w = (int) (Options.padXScale * origW);
+       int h = (int) (Options.padYScale * origH);
 
 
        ScorePoint sp = getBestBoxPosition(w, h);
@@ -278,9 +280,7 @@ public class Picture
 //       drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
        drawString(text, font, drawX, drawY);
 
-
-
-       write(outFile);
+       write(Options.outputFile);
 
        return true;
    }
