@@ -1,5 +1,3 @@
-import com.sun.org.apache.xerces.internal.xs.StringList;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -7,7 +5,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-//todo use file name to get html file
 /*
 Created by Will Kercher 2/26/18
 The goal of this application is to create a dictionary that takes the image name for a map from the CIA world factbook,
@@ -15,12 +12,9 @@ and to return the country name for that map.
 For example the file name "al-map.gif" would return "ALBANIA"
 
  */
-//todo make a list of all the country map file names
-//todo scrape html file for country name
 public class FileNameToCountryName {
     private static void createCSV( ZipFile factbook) throws IOException {
         ArrayList<String> filenameToCountryName = new ArrayList<String>();
-        System.out.println("CreateCSV Being Run");
         try {
             Enumeration entries = factbook.entries();
             BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
@@ -65,6 +59,7 @@ public class FileNameToCountryName {
             writer.write(str);
         }
         writer.close();
+        System.out.println("CSV Created");
     }
     private static void makeMapsDir() {
         File theDir = new File("maps");
@@ -87,25 +82,22 @@ public class FileNameToCountryName {
         }
     }
     public static void extractFile(String fileName, String zipPath) throws Exception{
-        String fileToBeExtracted = fileName;
-        String zipPackage = zipPath;
         // remove all the directory information from name and put it in maps
         String newFileName = fileName.replaceAll(".*/","maps/");
         //check if file already exists!
         File f = new File(newFileName);
         if(f.exists()){
             //If it does exist just return and don't extract
-            System.out.println("File already Exists!");
+            //System.out.println("File already Exists!");
             return;
         }
-        System.out.println("New name: " + newFileName);
         OutputStream out = new FileOutputStream(newFileName);
-        FileInputStream fileInputStream = new FileInputStream(zipPackage);
+        FileInputStream fileInputStream = new FileInputStream(zipPath);
         BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream );
         ZipInputStream zin = new ZipInputStream(bufferedInputStream);
         ZipEntry ze = null;
         while ((ze = zin.getNextEntry()) != null) {
-            if (ze.getName().equals(fileToBeExtracted)) {
+            if (ze.getName().equals(fileName)) {
                 byte[] buffer = new byte[9000];
                 int len;
                 while ((len = zin.read(buffer)) != -1) {
@@ -116,6 +108,7 @@ public class FileNameToCountryName {
             }
         }
         zin.close();
+        System.out.println("Map extracted: " + newFileName);
     }
     public static void unzipMaps(ZipFile factbook) throws Exception {
         System.out.println("List of Map Names Entered");
@@ -132,16 +125,16 @@ public class FileNameToCountryName {
             if(entry.getName().contains("-map.gif") && entry.getName().contains("factbook/graphics/maps/newmaps/")){
                 extractFile(entry.getName(), factbook.getName());
                 numMaps++;
-                System.out.println("Num Maps: " + numMaps);
+                //System.out.println("Num Maps: " + numMaps);
                 long timeSoFar = System.nanoTime();
-                System.out.print("Runtime seconds: ");
-                System.out.println((timeSoFar-timeStart)/1000000000.0);
+                //System.out.print("Runtime seconds: ");
+                //System.out.println((timeSoFar-timeStart)/1000000000.0);
             }
         }
         long timeEnd = System.nanoTime();
         System.out.print("Total Runtime seconds for maps extract: ");
         System.out.println((timeEnd-timeStart)/1000000000.0);
-        System.out.println("Number of Map files: " + numMaps);
+        System.out.println("Number of Map images: " + numMaps);
     }
 
     public static void createMapzip() throws IOException {
