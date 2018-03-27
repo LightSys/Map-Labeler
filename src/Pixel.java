@@ -21,11 +21,8 @@ public class Pixel
     /** the digital picture this pixel belongs to */
     private Picture picture;
 
-    /** the x (column) location of this pixel in the picture; (0,0) is top left */
-    private int x;
-
-    /** the y (row) location of this pixel in the picture; (0,0) is top left */
-    private int y;
+    /** the point location of the pixel.  has getX and getY.*/
+    private Point location;
 
     ////////////////////// constructors /////////////////////////////////
 
@@ -41,12 +38,8 @@ public class Pixel
         // set the picture
         this.picture = picture;
 
-        // set the x location
-        this.x = x;
-
-        // set the y location
-        this.y = y;
-
+        // set the location
+        this.location = new Point(x, y);
     }
 
     ///////////////////////// methods //////////////////////////////
@@ -55,25 +48,25 @@ public class Pixel
      * Method to get the x location of this pixel.
      * @return the x location of the pixel in the picture
      */
-    public int getX() { return x; }
+    public int getX() { return location.getX(); }
 
     /**
      * Method to get the y location of this pixel.
      * @return the y location of the pixel in the picture
      */
-    public int getY() { return y; }
+    public int getY() { return location.getY(); }
 
     /**
      * Method to get the row (y value)
      * @return the row (y value) of the pixel in the picture
      */
-    public int getRow() { return y; }
+    public int getRow() { return getY(); }
 
     /**
      * Method to get the column (x value)
      * @return the column (x value) of the pixel
      */
-    public int getCol() { return x; }
+    public int getCol() { return getX(); }
 
     /**
      * Method to get the amount of alpha (transparency) at this pixel.
@@ -85,7 +78,7 @@ public class Pixel
     /* get the value at the location from the picture as a 32 bit int
      * with alpha, red, green, blue each taking 8 bits from left to right
      */
-        int value = picture.getBasicPixel(x,y);
+        int value = picture.getBasicPixel(location);
 
         // get the alpha value (starts at 25 so shift right 24)
         // then and it with all 1's for the first 8 bits to keep
@@ -107,7 +100,7 @@ public class Pixel
     /* get the value at the location from the picture as a 32 bit int
      * with alpha, red, green, blue each taking 8 bits from left to right
      */
-        int value = picture.getBasicPixel(x,y);
+        int value = picture.getBasicPixel(location);
 
         // get the red value (starts at 17 so shift right 16)
         // then AND it with all 1's for the first 8 bits to
@@ -139,7 +132,7 @@ public class Pixel
     /* get the value at the location from the picture as a 32 bit int
      * with alpha, red, green, blue each taking 8 bits from left to right
      */
-        int value = picture.getBasicPixel(x,y);
+        int value = picture.getBasicPixel(location);
 
         // get the green value (starts at 9 so shift right 8)
         int green = (value >>  8) & 0xff;
@@ -169,7 +162,7 @@ public class Pixel
     /* get the value at the location from the picture as a 32 bit int
      * with alpha, red, green, blue each taking 8 bits from left to right
      */
-        int value = picture.getBasicPixel(x,y);
+        int value = picture.getBasicPixel(location);
 
         // get the blue value (starts at 0 so no shift required)
         int blue = value & 0xff;
@@ -197,7 +190,7 @@ public class Pixel
      /* get the value at the location from the picture as a 32 bit int
      * with alpha, red, green, blue each taking 8 bits from left to right
      */
-        int value = picture.getBasicPixel(x,y);
+        int value = picture.getBasicPixel(location);
 
         // get the red value (starts at 17 so shift right 16)
         // then AND it with all 1's for the first 8 bits to
@@ -242,7 +235,7 @@ public class Pixel
         int value = (alpha << 24) + (red << 16) + (green << 8) + blue;
 
         // update the picture with the int value
-        picture.setBasicPixel(x,y,value);
+        picture.setBasicPixel(location, value);
     }
 
     /**

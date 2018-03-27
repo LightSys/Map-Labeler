@@ -33,6 +33,16 @@ public class Picture
     }
 
     /**
+     * Method to return the pixel value as an int for the given x and y location
+     * @param p the position of the pixel
+     * @return the pixel value as an integer (alpha, red, green, blue)
+     */
+    public int getBasicPixel(Point p)
+    {
+        return bufferedImage.getRGB(p.getX(), p.getY());
+    }
+
+    /**
      * Method to set the value of a pixel in the picture from an int
      * @param x the x coordinate of the pixel
      * @param y the y coordinate of the pixel
@@ -41,6 +51,16 @@ public class Picture
     public void setBasicPixel(int x, int y, int rgb)
     {
         bufferedImage.setRGB(x,y,rgb);
+    }
+
+    /**
+     * Method to set the value of a pixel in the picture from an int
+     * @param p the position of the pixel
+     * @param rgb the new rgb value of the pixel (alpha, red, green, blue)
+     */
+    public void setBasicPixel(Point p, int rgb)
+    {
+        bufferedImage.setRGB(p.getX(), p.getY(),rgb);
     }
 
     /**
