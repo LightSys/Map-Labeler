@@ -170,6 +170,7 @@ public class FileNameToCountryName {
         makeMapsDir();
         // Get the maps from the factbook and unzip them to /maps
         unzipMaps(factbook);
+        //todo break createCSV() into it's own class
         //make csv for XX-map.gif -> country name
         createCSV(factbook);
         //test CSV with extracted Maps :)
