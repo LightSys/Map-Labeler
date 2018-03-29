@@ -24,12 +24,15 @@ public class LabelerMain {
                 printInfo();
                 break;
             case SINGLE:
+                System.out.println("Trying to open single file");
                 labelPicture(Options.inputFile, Options.text);
 //                Picture mypic = new Picture(Options.inputFile);
 //                mypic.writeLabel();
 //                mypic.write(Options.outputFile);
                 break;
             case CSV:
+                System.out.println("I udnerstand that this is CSV");
+
                 //setup
                 String csvName = Options.inputFile;
                 String mapsLoc = "maps/";
