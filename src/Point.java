@@ -35,8 +35,8 @@ public class Point {
     }
 
     public boolean inRange(int x, int y, int w, int h) {
-        if (this.x < x) return false;
-        if (this.y < y) return false;
+        if (this.x < x)    return false;
+        if (this.y < y)    return false;
         if (this.x >= x+w) return false;
         if (this.y >= y+h) return false;
         return true;

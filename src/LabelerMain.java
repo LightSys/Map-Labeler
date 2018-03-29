@@ -18,19 +18,62 @@ public class LabelerMain {
     public static void main(String[] args){
         //args[0] is the file
         //args[1] is the text of the label
-
-        setOptions(args);
-
-        String filename = args[0];
-        String text = args[1];
-        System.out.println("Opening " + filename);
-
-        Picture mypic = new Picture(Options.inputFile);
-        mypic.writeLabel();
-
+        Options.setOptions(args);
+        switch (Options.inputType){
+            case INFO:
+                printInfo();
+                break;
+            case SINGLE:
+                
+                Picture mypic = new Picture(Options.inputFile);
+                mypic.writeLabel();
+                mypic.write(Options.outputFile);
+                break;
+            case CSV:
+                //setup
+                //run many
+                break;
+            case DIRECTORY:
+                //setup
+                //run many
+                break;
+        }
         System.out.println("done");
     }
 
+    public static void printInfo() {
+        switch (Options.infoType){
+            case HELP:
+                printHelp();
+                break;
+            case FONT:
+                printFonts();
+                break;
+            case EXTENSION:
+                printExtensions();
+                break;
+        }
+    }
+
+    public static void printHelp() {
+        System.out.println("View the README at https://github.com/LightSys/Map-Labeler/blob/master/README.md");
+    }
+
+    public static void printFonts() {
+        System.out.println("Your machine can use the following fonts:");
+        String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        for (String font : fonts) {
+            System.out.println(font);
+        }
+    }
+
+    public static void printExtensions() {
+        System.out.println("This program handles the following file extensions:");
+        for (String ext : Options.EXTENSIONS) {
+            System.out.println(ext);
+        }
+    }
+/*
     private static void setOptions(String[] args){
         parseArguments(args);
         Options.outputFile = "out.gif";
@@ -165,34 +208,15 @@ public class LabelerMain {
         }
     }
 
-    private static void checkFontSize(ArrayList<String> argList){
-        int argIndex = checkForFlag(argList, "-s");
-        if (argIndex == -1) return;
-        int chosenFontSize = 0;
-        try {
-            chosenFontSize = Integer.parseInt(argList.get(argIndex));
-            argList.remove(argIndex);
-        } catch (NumberFormatException e) {
-            System.out.println("Cannot set font size to " + argList.get(argIndex));
-        } catch (IndexOutOfBoundsException e){
-            System.out.println("-s requires an integer argument");
-        }
 
-        if (chosenFontSize < 1){
-            System.out.println("Using default font size");
-        }
-        else {
-            Options.setFontSize(chosenFontSize);
-        }
-    }
 
     private static int checkForFlag(ArrayList<String> argList, String flag){
         for (int i = 0; i < argList.size() ; i++) {
             if (argList.get(i).equals(flag)) {
-                argList.remove(i);
                 return i;
             }
         }
         return -1;
     }
+    */
 }

@@ -278,7 +278,9 @@ public class Picture
            ScorePoint sp = getBestBoxPosition(w, h);
            int drawX = sp.getP().getX() + w / 2;
            int drawY = sp.getP().getY() + h / 2;
-           // drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
+           if (Options.debug) {
+               drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
+           }
            drawString(text, font, drawX, drawY);
        } else {
            String[] splitted = text.split("\\s\\s+"); //split on 2 spaces
@@ -295,15 +297,15 @@ public class Picture
            h = (origH * splitted.length) + yPadding;
            int w = (int) (Options.padXScale * maxW);
            ScorePoint sp = getBestBoxPosition(w, h);
-           drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
+           if (Options.debug) {
+               drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
+           }
            int drawX = sp.getP().getX() + w / 2;
            int drawTop = sp.getP().getY();
            for (int i = 0; i < splitted.length; i++) {
                drawString(splitted[i], font, drawX, yPadding + drawTop + i * origH);
            }
        }
-
-       write(Options.outputFile);
 
        return true;
    }
