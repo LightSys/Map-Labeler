@@ -31,7 +31,9 @@ public class LabelerMain {
                 break;
             case CSV:
                 //setup
-                //run many
+                String csvName = "maps.csv";
+                String mapsLoc = "maps/";
+                batchLabeler.ProcessCSV(csvName, mapsLoc);
                 break;
             case DIRECTORY:
                 //setup
@@ -46,7 +48,7 @@ public class LabelerMain {
         Options.text = labelText;
         Picture mypic = new Picture(Options.inputFile);
         mypic.writeLabel();
-        mypic.write("output\\" + inFileName);
+        mypic.write("output/" + inFileName);
 
 //        mypic.write(Options.outputFile);
     }

@@ -9,9 +9,8 @@ Created by Will Kercher 2/29/18
 The goal of this application is to take in the csv file that has the map names and
  */
 public class batchLabeler {
-    public static void main(String[] args){
-        String csvName = "maps.csv";
-        String mapsLoc = "maps/";
+    public batchLabeler(){}
+    public static void ProcessCSV(String csvName, String mapsLoc){
         //ReadCSV
         try {
             BufferedReader in = new BufferedReader(new FileReader(csvName));
@@ -37,6 +36,12 @@ public class batchLabeler {
         catch (IOException e) {
             System.out.println("Error looks like File can't be read");
         }
+    }
+    public static void main(String[] args){
+        String csvName = "maps.csv";
+        String mapsLoc = "maps/";
+//        batchLabeler(csvName, mapsLoc);
+        //todo mkdir for output use other method from FileNameToCountrNAme
 
     }
 }

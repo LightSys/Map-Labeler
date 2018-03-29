@@ -37,7 +37,7 @@ public class Options {
             case "directory":
                 inputType = InputType.DIRECTORY;
                 break;
-            case "csv":
+            case ".csv":
                 inputType = InputType.CSV;
                 break;
             default:
