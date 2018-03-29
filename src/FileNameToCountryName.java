@@ -1,8 +1,7 @@
-import com.sun.deploy.util.StringUtils;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -14,9 +13,20 @@ Created by Will Kercher 2/26/18
 The goal of this application is to create a dictionary that takes the image name for a map from the CIA world factbook,
 and to return the country name for that map.
 For example the file name "al-map.gif" would return "ALBANIA"
-
  */
 public class FileNameToCountryName {
+    //fixSplitName(String name) takes a string input, removes comma split, and corrects name
+    //ex: "Bahamas, The" -> "The Bahamas" and "Congo, Republic of the" -> "The Republic of the Congo"
+    private static String fixSplitName(String name){
+        System.out.println("Comma in country name: " + name);
+        String[] parts = name.split(",\\s"); // Array splits name
+        String a = parts[1];//switch sides
+        String b = parts[0];//switch sides
+        System.out.println("Part a: " + a);
+        System.out.println("Part b: " + b);
+        System.out.println("a+b: " + a + b);
+        return a + b;
+    }
     private static void createCSV( ZipFile factbook) throws IOException {
         ArrayList<String> filenameToCountryName = new ArrayList<>();
         try {
@@ -46,17 +56,9 @@ public class FileNameToCountryName {
                                 line = line.replaceAll(".*countryname=\"","");//remove title up to first "
                                 line = line.replaceAll("\"",""); //Remove closing quote "
                                 //fix countries with commas
-                                //ex: "Bahamas, The", "Saint Helena, Ascension, and Tristan da Cunha" and "Congo, Republic of the"
                                 int numCommas = line.length() - line.replaceAll(",","").length(); //Count number of commas in line
                                 if(numCommas == 1){ //That means country name needs to be switched
-                                    System.out.println("Comma in country name: " + line);
-                                    String[] parts = line.split(",\\s"); // Array splits name
-                                    String a = parts[1];//switch sides
-                                    String b = parts[0];//switch sides
-                                    System.out.println("Part a: " + a);
-                                    System.out.println("Part b: " + b);
-                                    System.out.println("a+b: " + a + b);
-                                    //System.in.read();
+                                    line = fixSplitName(line);
                                 }
 
                                 String csvline = abbreviation.concat("-map.gif,").concat(line).concat("\n"); // add line to csv in format "xx-map.gif,countryName"
@@ -82,15 +84,12 @@ public class FileNameToCountryName {
     }
     private static void makeMapsDir() {
         File theDir = new File("maps");
-
         // if the directory does not exist, create it
         if (!theDir.exists()) {
             System.out.println("creating directory: " + theDir.getName());
             boolean result = false;
-
             try{
-                theDir.mkdir();
-                result = true;
+                result = theDir.mkdir();
             }
             catch(SecurityException se){
                 //handle it
@@ -156,14 +155,6 @@ public class FileNameToCountryName {
         System.out.println("Number of Map images: " + numMaps);
     }
 
-    private static void createMapzip() {
-        //create new mapZip file
-
-        //iterate through maps and add each to zip
-
-
-    }
-
     public static void main(String[] args) throws Exception {
         //check input line File
         if(args.length == 0){
@@ -181,11 +172,9 @@ public class FileNameToCountryName {
         unzipMaps(factbook);
         //make csv for XX-map.gif -> country name
         createCSV(factbook);
-        //todo test CSV with extracted Maps :)
+        //test CSV with extracted Maps :)
         String csvName = "maps.csv";
         testCSV(csvName);
-        //todo zip up maps
-        createMapzip();
     }
 
     private static void testCSV(String csvName) {
@@ -194,7 +183,7 @@ public class FileNameToCountryName {
         System.out.println("Printing Folder maps/ Contents:");
         ArrayList<String> mapsWithoutNames = new ArrayList<String>();
         final File folder = new File("maps/");
-        for (final File fileEntry : folder.listFiles()) {
+        for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             mapsWithoutNames.add(fileEntry.getName());
             System.out.println(fileEntry.getName());
         }
@@ -220,7 +209,7 @@ public class FileNameToCountryName {
                         mapsWithoutNames.remove(fileName);
                     }
                     else{//It Doesn't have a name in the CSV :(
-                        //Do Nothing
+                        System.out.println(fileName + " Has no Name in " + csvName);
                     }
                 }
                 else{
@@ -230,11 +219,10 @@ public class FileNameToCountryName {
             System.out.println("Number of Maps not matched with a name: " + mapsWithoutNames.size());
             for (String homelessMap : mapsWithoutNames) {
                 System.out.println(homelessMap + " has no home :'(");
-
             }
         }
         catch (IOException e) {
-
+            System.out.println("Error looks like File can't be read");
         }
     }
 }
