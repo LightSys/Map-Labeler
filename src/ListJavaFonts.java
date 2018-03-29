@@ -12,5 +12,4 @@ public class ListJavaFonts
             System.out.println(fonts[i]);
         }
     }
-
 }
