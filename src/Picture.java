@@ -268,18 +268,40 @@ public class Picture
    public boolean writeLabel(){
        Font font = Options.font;
        String text = Options.text;
-
        int origW = getDisplayWidth(text, font);
        int origH = font.getSize();
-       int w = (int) (Options.padXScale * origW);
-       int h = (int) (Options.padYScale * origH);
+       if (!Options.newLine) {
+           int w = (int) (Options.padXScale * origW);
+           int h = (int) (Options.padYScale * origH);
 
 
-       ScorePoint sp = getBestBoxPosition(w, h);
-       int drawX = sp.getP().getX() + w/2;
-       int drawY = sp.getP().getY() + h/2;
-//       drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
-       drawString(text, font, drawX, drawY);
+           ScorePoint sp = getBestBoxPosition(w, h);
+           int drawX = sp.getP().getX() + w / 2;
+           int drawY = sp.getP().getY() + h / 2;
+           // drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
+           drawString(text, font, drawX, drawY);
+       } else {
+           String[] splitted = text.split("\\s\\s+"); //split on 2 spaces
+           int[] widths = new int[splitted.length];
+           int maxW = 0;
+           for (int i = 0; i < splitted.length; i++) {
+               widths[i] = getDisplayWidth(splitted[i], font);
+               if (maxW < widths[i]) {
+                   maxW = widths[i];
+               }
+           }
+           int h = (int) (Options.padYScale * origH);
+           int yPadding = h - origH;
+           h = (origH * splitted.length) + yPadding;
+           int w = (int) (Options.padXScale * maxW);
+           ScorePoint sp = getBestBoxPosition(w, h);
+           drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
+           int drawX = sp.getP().getX() + w / 2;
+           int drawTop = sp.getP().getY();
+           for (int i = 0; i < splitted.length; i++) {
+               drawString(splitted[i], font, drawX, yPadding + drawTop + i * origH);
+           }
+       }
 
        write(Options.outputFile);
 
