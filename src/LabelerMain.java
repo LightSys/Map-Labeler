@@ -31,7 +31,7 @@ public class LabelerMain {
                 break;
             case CSV:
                 //setup
-                String csvName = "maps.csv";
+                String csvName = Options.inputFile;
                 String mapsLoc = "maps/";
                 batchLabeler.ProcessCSV(csvName, mapsLoc);
                 break;
