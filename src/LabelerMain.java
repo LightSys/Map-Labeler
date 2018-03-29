@@ -24,10 +24,10 @@ public class LabelerMain {
                 printInfo();
                 break;
             case SINGLE:
-                
-                Picture mypic = new Picture(Options.inputFile);
-                mypic.writeLabel();
-                mypic.write(Options.outputFile);
+                labelPicture(Options.inputFile, Options.text);
+//                Picture mypic = new Picture(Options.inputFile);
+//                mypic.writeLabel();
+//                mypic.write(Options.outputFile);
                 break;
             case CSV:
                 //setup
@@ -39,6 +39,16 @@ public class LabelerMain {
                 break;
         }
         System.out.println("done");
+    }
+
+    public static void labelPicture(String inFileName, String labelText) {
+        Options.inputFile = inFileName;
+        Options.text = labelText;
+        Picture mypic = new Picture(Options.inputFile);
+        mypic.writeLabel();
+        mypic.write("output\\" + inFileName);
+
+//        mypic.write(Options.outputFile);
     }
 
     public static void printInfo() {
