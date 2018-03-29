@@ -1,6 +1,10 @@
+import com.sun.deploy.util.StringUtils;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -26,21 +30,36 @@ public class FileNameToCountryName {
                 //check html for each country example: XX.html
                 if (entry.getName().matches(".*/[a-z][a-z].html")) { //is a country html
                     String abbreviation = entry.getName();
-                    abbreviation = abbreviation.replaceAll(".*/",""); // removes prefix
-                    abbreviation = abbreviation.replaceAll(".html","");
+                    abbreviation = abbreviation.replaceAll(".*/","");  // removes prefix
+                    abbreviation = abbreviation.replaceAll(".html","");// removes suffix
                     long size = entry.getSize();
                     if (size > 0) {
                         //System.out.println("Length is " + size);
-                        BufferedReader br = new BufferedReader(
-                                new InputStreamReader(factbook.getInputStream(entry)));
+                        BufferedReader br = new BufferedReader(new InputStreamReader(factbook.getInputStream(entry)));
                         String line;
                         //process each line of the document
                         while ((line = br.readLine()) != null) {
+                            //check if line of html has countryname
                             if(line.contains("countryname")){
+                                //System.in.read();
                                 countryName++;
-                                line = line.replaceAll(".*countryname=\"","");
-                                line = line.replaceAll("\"","");
-                                String csvline = abbreviation.concat("-map.gif,").concat(line).concat("\n");
+                                line = line.replaceAll(".*countryname=\"","");//remove title up to first "
+                                line = line.replaceAll("\"",""); //Remove closing quote "
+                                //fix countries with commas
+                                //ex: "Bahamas, The", "Saint Helena, Ascension, and Tristan da Cunha" and "Congo, Republic of the"
+                                int numCommas = line.length() - line.replaceAll(",","").length(); //Count number of commas in line
+                                if(numCommas == 1){ //That means country name needs to be switched
+                                    System.out.println("Comma in country name: " + line);
+                                    String[] parts = line.split(",\\s"); // Array splits name
+                                    String a = parts[1];//switch sides
+                                    String b = parts[0];//switch sides
+                                    System.out.println("Part a: " + a);
+                                    System.out.println("Part b: " + b);
+                                    System.out.println("a+b: " + a + b);
+                                    //System.in.read();
+                                }
+
+                                String csvline = abbreviation.concat("-map.gif,").concat(line).concat("\n"); // add line to csv in format "xx-map.gif,countryName"
                                 //System.out.println(csvline);
                                 filenameToCountryName.add(csvline);
                                 break;
@@ -146,7 +165,7 @@ public class FileNameToCountryName {
     }
 
     public static void main(String[] args) throws Exception {
-        //check File
+        //check input line File
         if(args.length == 0){
             System.out.println("No File was given!");
             System.out.println("Please input location of factbook.zip");
@@ -161,16 +180,19 @@ public class FileNameToCountryName {
         // Get the maps from the factbook and unzip them to /maps
         unzipMaps(factbook);
         //make csv for XX-map.gif -> country name
-//        createCSV(factbook);
+        createCSV(factbook);
         //todo test CSV with extracted Maps :)
-        testCSV();
+        String csvName = "maps.csv";
+        testCSV(csvName);
         //todo zip up maps
         createMapzip();
     }
 
-    private static void testCSV() {
+    private static void testCSV(String csvName) {
+        System.out.println("TEST CSV BEING RAN");
         //list files in maps/
-        ArrayList mapsWithoutNames = new ArrayList<String>();
+        System.out.println("Printing Folder maps/ Contents:");
+        ArrayList<String> mapsWithoutNames = new ArrayList<String>();
         final File folder = new File("maps/");
         for (final File fileEntry : folder.listFiles()) {
             mapsWithoutNames.add(fileEntry.getName());
@@ -178,15 +200,41 @@ public class FileNameToCountryName {
         }
         //read csv
         try {
-            BufferedReader in = new BufferedReader(new FileReader("maps.csv"));
+            BufferedReader in = new BufferedReader(new FileReader(csvName));
+            Pattern selectFileName = Pattern.compile(".+?(?=,)"); // regex to just select before the comma "," in the csv
+            Pattern selectCountryName = Pattern.compile("(?<=,).*"); // regex to select after the comma "," in the csv
             String line;
-
+            System.out.println("Reading CSV: " + csvName);
             while ((line = in.readLine()) != null) {
-                //todo parse this line and then check if it is contained in the csv
-                System.out.println(line);
+                //parse line for filename
+                Matcher fileNameMatcher = selectFileName.matcher(line);
+                //parse line for country name
+                Matcher countryNameMatcher = selectCountryName.matcher(line);
+                if(fileNameMatcher.find() && countryNameMatcher.find()){
+                    String fileName = fileNameMatcher.group(0);
+                    String countryName = countryNameMatcher.group(0);
+                    //check if map from folder has a map in the CSV
+                    if(mapsWithoutNames.contains(fileName)){//It has a name in the CSV :)
+                        System.out.println("There exists a name for: " + fileName + " that name is: " + countryName );
+                        //remove filename from mapsWithoutNames
+                        mapsWithoutNames.remove(fileName);
+                    }
+                    else{//It Doesn't have a name in the CSV :(
+                        //Do Nothing
+                    }
+                }
+                else{
+                    System.out.println("Was not able to find both FileName and CountryName from line: " + line);
+                }
             }
-            System.out.println(line);
-        } catch (IOException e) {
+            System.out.println("Number of Maps not matched with a name: " + mapsWithoutNames.size());
+            for (String homelessMap : mapsWithoutNames) {
+                System.out.println(homelessMap + " has no home :'(");
+
+            }
+        }
+        catch (IOException e) {
+
         }
     }
 }
