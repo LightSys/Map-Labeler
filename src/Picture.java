@@ -153,8 +153,7 @@ public class Picture
         // get a graphics context to use to draw on the buffered image
         Graphics2D graphics2d = bufferedImage.createGraphics();
 
-        // set the color to white
-        graphics2d.setPaint(Color.black);
+        graphics2d.setPaint(Options.color);
 
         graphics2d.setFont(font);
 
@@ -265,7 +264,7 @@ public class Picture
         return noiseBoxes.getBestBoxLocation();
     }
 
-   public boolean writeLabel(){
+   public boolean writeLabel() {
        Font font = Options.font;
        String text = Options.text;
        int origW = getDisplayWidth(text, font);
@@ -273,8 +272,12 @@ public class Picture
        if (!Options.newLine) {
            int w = (int) (Options.padXScale * origW);
            int h = (int) (Options.padYScale * origH);
-
-
+           if (w > this.getWidth()) {
+               throw new IllegalArgumentException("Label is too wide! Lower X padding, font size, or text length.");
+           }
+           if (h > this.getHeight()) {
+               throw new IllegalArgumentException("Label is too tall! Lower Y padding, font size, or use fewer lines.");
+           }
            ScorePoint sp = getBestBoxPosition(w, h);
            int drawX = sp.getP().getX() + w / 2;
            int drawY = sp.getP().getY() + h / 2;
@@ -296,6 +299,12 @@ public class Picture
            int yPadding = h - origH;
            h = (origH * splitted.length) + yPadding;
            int w = (int) (Options.padXScale * maxW);
+           if (w > this.getWidth()) {
+               throw new IllegalArgumentException("Label is too wide! Lower X padding, font size, or text length.");
+           }
+           if (h > this.getHeight()) {
+               throw new IllegalArgumentException("Label is too tall! Lower Y padding, font size, or use fewer lines.");
+           }
            ScorePoint sp = getBestBoxPosition(w, h);
            if (Options.debug) {
                drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
@@ -306,7 +315,6 @@ public class Picture
                drawString(splitted[i], font, drawX, yPadding + drawTop + i * origH);
            }
        }
-
        return true;
    }
 

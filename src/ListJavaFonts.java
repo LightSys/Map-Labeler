@@ -1,4 +1,4 @@
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 
 public class ListJavaFonts
 {
@@ -11,5 +11,6 @@ public class ListJavaFonts
         {
             System.out.println(fonts[i]);
         }
+        System.out.println(Font.ITALIC);
     }
 }

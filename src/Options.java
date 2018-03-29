@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -9,12 +10,12 @@ import java.util.Arrays;
 public class Options {
     public enum InputType {SINGLE, DIRECTORY, CSV, INFO}
     public enum InfoType {HELP, FONT, EXTENSION}
-    public static final String[] EXTENSIONS = {".csv", ".gif", ".jpg", ".png", ".svg", ".pdf", ".tiff", ".bmp"};
+    public static final String[] EXTENSIONS = {".csv", ".gif", ".jpg", ".png", ".bmp"};
 
     public static double padXScale = 1.2;
     public static double padYScale = 1.5;
     public static boolean newLine = false;
-    public static Font font = new Font("Times New Roman", Font.PLAIN,16);
+    public static Font font = new Font("Arial", Font.PLAIN, 14);
     public static String outputFile = "out.gif";
     public static String inputFile = "us-map.gif";
     public static String text = "Sample Label";
@@ -22,6 +23,7 @@ public class Options {
     public static InputType inputType = null;
     public static InfoType infoType = null;
     public static String errorMessage = null;
+    public static Color color = null;
 
     public static boolean debug = false;
 
@@ -37,7 +39,7 @@ public class Options {
             case "directory":
                 inputType = InputType.DIRECTORY;
                 break;
-            case "csv":
+            case ".csv":
                 inputType = InputType.CSV;
                 break;
             default:
@@ -82,11 +84,34 @@ public class Options {
             int i = argList.indexOf("-py");
             setYPaddingScale(argList.get(i+1));
         }
+        if (argsContainsFlag("-c")) {
+            int i = argList.indexOf("-c");
+            setColor(argList.get(i+1));
+        }
         if (errorMessage != null) {
             inputType = InputType.INFO;
         }
+        //TODO notify user about unknown flags
+        printAllOptions();
     }
 
+    public static void printAllOptions() {
+        if ((font.getStyle() & 1) == 1){
+            System.out.println("Font Style set to Bold.");
+        }
+        if ((font.getStyle() & 2) == 2){
+            System.out.println("Font Style set to Italic.");
+        }
+        if (font.getStyle() == 0) {
+            System.out.println("Font Style set to Plain.");
+        }
+
+        System.out.println("Font Size set to " + font.getSize());
+        System.out.println("Font set to " + font.getName());
+        System.out.println("Font Color set to " + color);
+        System.out.println("Padding X Scale set to " + padXScale);
+        System.out.println("Padding Y Scale set to " + padYScale);
+    }
 
     private static void setFontPlain(){font = new Font(font.getName(), Font.PLAIN, font.getSize());}
 
@@ -102,7 +127,6 @@ public class Options {
             String extension = fileName.substring(i);
             for (String ext : EXTENSIONS) {
                 if (ext.equals(extension)) {
-                    System.out.println(fileName);
                     return extension;
                 }
             }
@@ -188,12 +212,12 @@ public class Options {
     private static void setXPaddingScale(String scale){
         double chosenXPaddingScale = 0;
         if (scale.equals("")) {
-            System.out.println("-s requires an integer argument");
+            System.out.println("-px requires an integer argument");
         } else {
             try {
                 chosenXPaddingScale = Double.parseDouble(scale);
             } catch (NumberFormatException e) {
-                System.out.println("Cannot set font size to " + scale);
+                System.out.println("Cannot set x padding scale to " + scale);
             }
         }
         if (chosenXPaddingScale < 1.0){
@@ -207,12 +231,12 @@ public class Options {
     private static void setYPaddingScale(String scale){
         double chosenYPaddingScale = 0;
         if (scale.equals("")) {
-            System.out.println("-s requires an integer argument");
+            System.out.println("-py requires an integer argument");
         } else {
             try {
                 chosenYPaddingScale = Double.parseDouble(scale);
             } catch (NumberFormatException e) {
-                System.out.println("Cannot set font size to " + scale);
+                System.out.println("Cannot set y padding scale to " + scale);
             }
         }
         if (chosenYPaddingScale < 1.0){
@@ -223,4 +247,41 @@ public class Options {
         }
     }
 
+    private static void setColor(String strColor){
+//        Color c;
+//        try {
+//            Field field = Color.class.getField(strColor);
+//            c = (Color)field.get(null);
+//        } catch (Exception e) {
+//            c = null; // Not defined
+//        }
+//        if (c != null) {
+//            Options.color = c;
+//        }
+//        else {
+//            Options.color = Color.black;
+//        }
+        color = stringToColor(strColor);
+    }
+
+    public static Color stringToColor(final String value) {
+        if (value == null) {
+            return Color.black;
+        }
+        try {
+            // get color by hex or octal value
+            return Color.decode(value);
+        } catch (NumberFormatException nfe) {
+            // if we can't decode lets try to get it by name
+            try {
+                // try to get a color by name using reflection
+                final Field f = Color.class.getField(value);
+
+                return (Color) f.get(null);
+            } catch (Exception ce) {
+                // if we can't get any color return black
+                return Color.black;
+            }
+        }
+    }
 }
