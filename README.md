@@ -208,72 +208,49 @@ java Labeler -ext
 ```
 
 ## Examples  
-![aruba-map.gif] (https://github.com/LightSys/Map-Labeler/blob/JacobREADME/aruba-map.gif)
+The following is what aruba-map looks like before it is passed into the program
+![aruba-map.gif](https://github.com/LightSys/Map-Labeler/blob/JacobREADME/aruba-map.gif)
 
-
-usa-map.gif
-
-
-
+The following line will place the label "Aruba" on the specified image where it does not collide with anything and is relatively close to the center
 ```
 java Labeler aruba-map.gif Aruba
 ```
-
-```
-java Labeler aruba-map.gif Aruba -b
-```
+Output:  
+![aruba-map-labeled.gif](https://github.com/LightSys/Map-Labeler/blob/JacobREADME/aruba-map-labeled.gif)
 
 
+The following line will place the label "Island of Aruba" on the specified image with many arguments
 ```
-java Labeler aruba-map.gif Aruba -i
+java Labeler aruba-map.gif "Island  of  Aruba" -b -i -px 1.1 -py 1.9 -f "Arial" -s 32 -n
 ```
+Output:
+![aruba-map-arguments.gif](https://github.com/LightSys/Map-Labeler/blob/JacobREADME/aruba-map-arguments.gif)
 
+The following line will place the label "Aruba" on the specified image in a way that may be useful when using images from CIA World Factbook
+```
+java Labeler aruba-map.gif "Aruba" -watermark -factbook
+```
+Output:
+![aruba-map-factbook.gif](https://github.com/LightSys/Map-Labeler/blob/JacobREADME/aruba-map-factbook.gif)
 
+The following line will not output any image and instead will print out a list of fonts because the "-font" flag is present
 ```
-java Labeler usa-map.gif "United States of America"
+java Labeler aruba-map.gif Aruba -f "Arial" -s 32 -b -i -font
 ```
-
-
-```
-java Labeler usa-map.gif "United States  of  America" -n
-```
-
-```
-java Labeler aruba-map.gif Aruba -f "Comic Sans MS"
-```
-
-```
-java Labeler aruba-map.gif Aruba -s 18
-```
-
-```
-java Labeler aruba-map.gif Aruba -px 1.8
-```
-
-```
-java Labeler aruba-map.gif Aruba -py 2.1
-```
-
-
-## Additional Examples
-
-```
-java Labeler aruba-map.gif Aruba -b -i
-```
-
-```
-java Labeler aruba-map.gif Aruba -px 1.1 -py 1.9
-```
-
-```
-java Labeler aruba-map.gif Aruba -f "Arial" -s 32
-```
-
-
-```
-java Labeler aruba-map.gif Aruba -f "Arial" -s 32 -px 1.1 -py 1.9 -b -i
-```
-
-```
-java Labeler aruba-map.gif Aruba -f "Arial" -s 32 -b -i -fonts
-```
+Output: (this will vary by machine)
+AR BERKLEY
+AR BLANCA
+AR BONNIE
+AR CARTER
+AR CENA
+AR CHRISTY
+AR DARLING
+AR DECODE
+AR DELANEY
+AR DESTINE
+AR ESSENCE
+AR HERMANN
+AR JULIAN
+Arial
+Arial Black
+(etc)
