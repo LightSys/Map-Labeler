@@ -33,7 +33,9 @@ public class Options {
     public static int locationX = -1;
     public static int locationY = -1;
     public static float alpha = 1.0f;
-    public static boolean factbook = false;
+    public static Color targetColor = null;
+
+    public static final Color FB_LAND_COLOR = new Color(255, 240, 222);
 
 
     public Options() throws InstantiationException {
@@ -79,7 +81,7 @@ public class Options {
             newLine = true;
         }
         if (argsContainsFlag("-factbook")) {
-            factbook = true;
+            targetColor = Options.FB_LAND_COLOR;
         }
 
         argList.add(""); // avoid index out of bounds
@@ -115,6 +117,11 @@ public class Options {
             int i = argList.indexOf("-a");
             setAlpha(argList.get(i + 1));
         }
+        if (argsContainsFlag("-tc")) {
+            int i = argList.indexOf("-tc");
+            setTargetColor(argList.get(i + 1));
+        }
+
         if (errorMessage != null) {
             inputType = InputType.INFO;
         }
@@ -143,6 +150,7 @@ public class Options {
         else {System.out.println("No specific Location Y set");}
         if (locationX != -1){System.out.println("Location X set to " + locationX);}
         else {System.out.println("No specific Location X set");}
+        System.out.println("Target Color set to " + targetColor);
     }
 
     private static void setFontPlain() {
@@ -300,6 +308,7 @@ public class Options {
 
     private static void setColor(String strColor) {
         color = stringToColor(strColor);
+        if (color == null) color = Color.black;
     }
 
     public static Color stringToColor(final String value) {
@@ -318,7 +327,7 @@ public class Options {
                 return (Color) f.get(null);
             } catch (Exception ce) {
                 // if we can't get any color return black
-                return Color.black;
+                return null;
             }
         }
     }
@@ -370,5 +379,8 @@ public class Options {
             System.out.println(chosenAlpha*255);
             Options.color = new Color(Options.color.getRed(), Options.color.getGreen(), Options.color.getBlue(), (int)(chosenAlpha*255));
         }
+    }
+    private static void setTargetColor(String strColor) {
+        targetColor = stringToColor(strColor);
     }
 }

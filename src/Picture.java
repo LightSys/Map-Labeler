@@ -284,14 +284,12 @@ public class Picture
                w = (int) (Options.padXScale * origW);
                h = (int) (Options.padYScale * origH);
            }
-           if (h > this.getHeight()) {
-               throw new IllegalArgumentException("Label is too tall! Lower Y padding, font size, or use fewer lines.");
-           }
            ScorePoint sp = getBestBoxPosition(w, h);
            int drawX = sp.getP().getX() + w / 2;
            int drawY = sp.getP().getY() + h / 2;
            if (Options.debug) {
                drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
+               System.out.println(sp.getScore());
            }
            drawString(text, font, drawX, drawY);
        } else {
@@ -317,6 +315,7 @@ public class Picture
            ScorePoint sp = getBestBoxPosition(w, h);
            if (Options.debug) {
                drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
+               System.out.println(sp.getScore());
            }
            int drawX = sp.getP().getX() + w / 2;
            int drawTop = sp.getP().getY();

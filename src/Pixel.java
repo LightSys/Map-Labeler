@@ -331,9 +331,9 @@ public class Pixel
         double redDistance = color1.getRed() - color2.getRed();
         double greenDistance = color1.getGreen() - color2.getGreen();
         double blueDistance = color1.getBlue() - color2.getBlue();
-        double distance = Math.sqrt(redDistance * redDistance +
+        double distance = Math.sqrt((redDistance * redDistance +
                 greenDistance * greenDistance +
-                blueDistance * blueDistance);
+                blueDistance * blueDistance)/3);
         return distance;
     }
 

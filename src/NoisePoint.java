@@ -8,7 +8,7 @@ public class NoisePoint extends ScorePoint {
     //check 4 cardinal directions
     public NoisePoint(Point p, Picture pic){
         super(p);
-        this.setScore(calculateNoise(p, pic));
+        this.setScore(calculateScore(p, pic));
     }
 
     public NoisePoint(Point p, double noise){
@@ -19,7 +19,7 @@ public class NoisePoint extends ScorePoint {
         super(new Point(x, y), noise);
     }
 
-    public static double calculateNoise(Point p, Picture pic) {
+    public static double calculateScore(Point p, Picture pic) {
         int pw = pic.getWidth();
         int ph = pic.getHeight();
         double noise = 0.0;
@@ -47,6 +47,16 @@ public class NoisePoint extends ScorePoint {
             count ++;
         }
         noise = noise / (double)count;
+
+        if (Options.targetColor != null) {
+            noise += distToTarget(myColor, Options.targetColor)/2.0;
+        }
+
         return noise;
+    }
+
+    public static double distToTarget(Color myColor, Color targetColor) {
+        double dist = Math.abs(Pixel.colorDistance(myColor, targetColor));
+        return dist;
     }
 }
