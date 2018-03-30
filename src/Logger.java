@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,10 +16,10 @@ public class Logger {
     public static void main(String[] args){
         addLog("Test LOG OINK!!!!");
     }
-    //todo write functionaliyt
+    //Takes in a string and appends that to the end of the log file!
     public static void addLog(String newLog){
         makeDirectory.makeNewDir("logs");// make sure there is a logs directory
-        String logName = "logs/" + java.time.LocalDate.now().toString() + "-log.log"; // make sure you have a log for that day
+        String logName = "logs/" + java.time.LocalDate.now().toString() + ".log"; // make sure you have a log for that day
         System.out.println(logName);
         //create logfile
         createLogFile(logName);
