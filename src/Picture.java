@@ -95,15 +95,14 @@ public class Picture
      */
     public void loadOrFail(String fileName) throws IOException
     {
-        // set the current picture's file name
-        this.fileName = fileName;
-
         // set the extension
         int posDot = fileName.indexOf('.');
         if (posDot >= 0)
             this.extension = fileName.substring(posDot + 1);
 
-        File file = new File(this.fileName);
+        File file = new File(fileName);
+        // set the current picture's file name
+        this.fileName = file.getName();
 
         if (!file.canRead())
         {
@@ -238,8 +237,8 @@ public class Picture
             this.writeOrFail(fileName);
             return true;
         } catch (Exception ex) {
-            Logger.addLog("There was an error trying to write to" + fileName);
-            System.out.println("There was an error trying to write to" + fileName);
+            Logger.addLog("There was an error trying to write to " + fileName);
+            System.out.println("There was an error trying to write to " + fileName);
             ex.printStackTrace();
             return false;
         }
@@ -280,7 +279,7 @@ public class Picture
         Dimension boxSize = getBoxSize(strings, font, Options.padXScale, Options.padYScale);
         if (!boxSize.fitsInside(getWidth(), getHeight())) {
             System.out.println("Label doesn't fit. Shrinking font size...");
-            // TODO log?
+            Logger.addLog("Label doesn't fit " + fileName + ". Shrinking font size...");
             Options.shrinkFontSizeToFit(this, strings);
             font = Options.font;
             boxSize = getBoxSize(strings, font, Options.padXScale, Options.padYScale);

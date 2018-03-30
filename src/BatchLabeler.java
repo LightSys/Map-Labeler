@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -43,6 +44,29 @@ public class BatchLabeler {
             Logger.addLog("Error looks like " + csvName + " can't be read");
         }
     }
+
+    public static void ProcessDir(String mapsLoc){
+        File dir = new File(mapsLoc);
+        File[] directoryListing = dir.listFiles();
+        if (directoryListing != null) {
+            for (File child : directoryListing) {
+                String fileName = child.getName();
+                try {
+                    String fileNameWithOutExt = fileName.replaceFirst("[.][^.]+$", "");
+                    Labeler.labelPicture(mapsLoc + fileName, fileNameWithOutExt);
+                }
+                catch(IllegalArgumentException e){
+                    e.printStackTrace();
+                    Logger.addLog("could not label" + fileName + "the label was too big to fit the picture");
+                }
+            }
+        } else {
+            String message = "Could not open dir " + mapsLoc;
+            System.out.println(message);
+            Logger.addLog(message);
+        }
+    }
+
     public static void main(String[] args){
     }
 }

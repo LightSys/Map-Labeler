@@ -27,7 +27,7 @@ public class Options {
     public static String errorMessage = null;
     public static Color color = Color.black;
 
-    public static boolean debug = true;
+    public static boolean debug = false;
 
     public static ArrayList<String> argList;
     public static int locationX = -1;

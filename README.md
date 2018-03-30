@@ -32,18 +32,17 @@ Example
 
 The program will read each image based on the filenames, 
 place labels on them, and output the files to the output directory.
+It will look for the files in the given input directory
 Make sure the file has the extension ".csv"
 ```
-java Labeler <csv-file>
+java Labeler <csv-file> <input-directory>
 ```  
 Example 
 ```
-java Labeler maps-with-names.csv
+java Labeler maps-with-names.csv maps/
 ```
 
-(TODO, tell them to add location??)
-
-### Label multiple maps in a directory:  (Currently NOT supported)
+### Label multiple maps in a directory:  
 The program will read each image in the directory, 
 place labels on them based on the filenames, and output the files to the output directory.  
 The files in the directory should be named with the desired label 
