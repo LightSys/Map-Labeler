@@ -238,8 +238,8 @@ public class Picture
             this.writeOrFail(fileName);
             return true;
         } catch (Exception ex) {
-            Logger.addLog("There was an error trying to write " + fileName);
-            System.out.println("There was an error trying to write " + fileName);
+            Logger.addLog("There was an error trying to write to" + fileName);
+            System.out.println("There was an error trying to write to" + fileName);
             ex.printStackTrace();
             return false;
         }
