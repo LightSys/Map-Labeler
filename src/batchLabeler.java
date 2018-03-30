@@ -26,7 +26,13 @@ public class batchLabeler {
                 if(fileNameMatcher.find() && countryNameMatcher.find()){
                     String fileName = fileNameMatcher.group(0);
                     String countryName = countryNameMatcher.group(0);
-                    Labeler.labelPicture(mapsLoc+fileName,countryName);
+                    try {
+                        Labeler.labelPicture(mapsLoc + fileName, countryName);
+                    }
+                    catch(IllegalArgumentException e){
+                        e.printStackTrace();
+                        System.out.println("could not label" + fileName + "the label was too big to fit the picture");
+                    }
                 }
                 else{
                     System.out.println("Was not able to find both FileName and CountryName from line: " + line);

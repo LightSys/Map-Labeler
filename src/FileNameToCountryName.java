@@ -82,23 +82,6 @@ public class FileNameToCountryName {
         writer.close();
         System.out.println("CSV Created");
     }
-    private static void makeMapsDir() {
-        File theDir = new File("maps");
-        // if the directory does not exist, create it
-        if (!theDir.exists()) {
-            System.out.println("creating directory: " + theDir.getName());
-            boolean result = false;
-            try{
-                result = theDir.mkdir();
-            }
-            catch(SecurityException se){
-                //handle it
-            }
-            if(result) {
-                System.out.println("DIR created");
-            }
-        }
-    }
     private static void extractFile(String fileName, String zipPath) throws Exception{
         // remove all the directory information from name and put it in maps
         String newFileName = fileName.replaceAll(".*/","maps/");
@@ -167,7 +150,7 @@ public class FileNameToCountryName {
         // Declare factbook as the input given for the factbook zip
         ZipFile factbook = new ZipFile(args[0]);
         // Make /maps dir for map .gif's to be extracted to
-        makeMapsDir();
+        makeDirectory.makeNewDir("maps");
         // Get the maps from the factbook and unzip them to /maps
         unzipMaps(factbook);
         //todo break createCSV() into it's own class
