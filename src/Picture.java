@@ -13,6 +13,7 @@ public class Picture
 
     public Picture(String fileName)
     {
+        System.out.println("Trying to open thing");
         load(fileName);
     }
 

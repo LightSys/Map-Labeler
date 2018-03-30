@@ -12,12 +12,15 @@ public class LabelerMain {
                 printInfo();
                 break;
             case SINGLE:
+                System.out.println("Trying to open single file");
                 labelPicture(Options.inputFile, Options.text);
                 break;
             case CSV:
                 System.out.println("Print CSV");
                 //setup
-                //run many
+                String csvName = Options.inputFile;
+                String mapsLoc = "maps/";
+                batchLabeler.ProcessCSV(csvName, mapsLoc);
                 break;
             case DIRECTORY:
                 System.out.println("Print directory");
@@ -35,7 +38,7 @@ public class LabelerMain {
         System.out.println("Opened " + Options.inputFile);
         System.out.println("Labeling as " + Options.text);
         mypic.writeLabel();
-        mypic.write("output\\" + inFileName);
+        mypic.write("output/" + inFileName);
 
 //        mypic.write(Options.outputFile);
     }

@@ -140,7 +140,7 @@ public class FileNameToCountryName {
         while(entries.hasMoreElements()){
             ZipEntry entry = entries.nextElement();
             // Checks if file is a map and add it to the list of maps
-            if(entry.getName().contains("-map.gif") && entry.getName().contains("factbook/graphics/maps/newmaps/")){
+            if(entry.getName().contains("-map.gif") && entry.getName().contains("factbook/graphics/maps/")){
                 extractFile(entry.getName(), factbook.getName());
                 numMaps++;
                 //System.out.println("Num Maps: " + numMaps);
