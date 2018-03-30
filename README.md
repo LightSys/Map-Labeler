@@ -208,7 +208,7 @@ java Labeler -ext
 ```
 
 ## Examples  
-The following is what aruba-map looks like before it is passed into the program
+The following is what aruba-map looks like before it is passed into the program  
 ![aruba-map.gif](https://github.com/LightSys/Map-Labeler/blob/JacobREADME/aruba-map.gif)
 
 The following line will place the label "Aruba" on the specified image where it does not collide with anything and is relatively close to the center
@@ -223,21 +223,20 @@ The following line will place the label "Island of Aruba" on the specified image
 ```
 java Labeler aruba-map.gif "Island  of  Aruba" -b -i -px 1.1 -py 1.9 -f "Arial" -s 32 -n
 ```
-Output:
+Output:  
 ![aruba-map-arguments.gif](https://github.com/LightSys/Map-Labeler/blob/JacobREADME/aruba-map-arguments.gif)
 
 The following line will place the label "Aruba" on the specified image in a way that may be useful when using images from CIA World Factbook
 ```
 java Labeler aruba-map.gif "Aruba" -watermark -factbook
 ```
-Output:
+Output:  
 ![aruba-map-factbook.gif](https://github.com/LightSys/Map-Labeler/blob/JacobREADME/aruba-map-factbook.gif)
 
 The following line will not output any image and instead will print out a list of fonts because the "-font" flag is present
 ```
 java Labeler aruba-map.gif Aruba -f "Arial" -s 32 -b -i -font
 ```
-<<<<<<< HEAD
 Output: (this will vary by machine)
 AR BERKLEY
 AR BLANCA
@@ -255,7 +254,4 @@ AR JULIAN
 Arial
 Arial Black
 (etc)
-=======
-java Labeler aruba-map.gif Aruba -f "Arial" -s 32 -b -i -fonts
-```
->>>>>>> 443f821e43ece445fdc3013e599297c988b36a09
+
