@@ -1,10 +1,8 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import javax.swing.text.html.Option;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.awt.geom.*;
+import java.io.File;
+import java.io.IOException;
 
 public class Picture
 {
@@ -136,6 +134,7 @@ public class Picture
 
         } catch (Exception ex) {
             System.out.println("There was an error trying to open " + fileName);
+            Logger.addLog("There was an error trying to open " + fileName);
             bufferedImage = new BufferedImage(600,200,
                     BufferedImage.TYPE_INT_RGB);
             addMessage("Couldn't load " + fileName, new Font("Helvetica",Font.BOLD,16),5,100);
@@ -239,7 +238,8 @@ public class Picture
             this.writeOrFail(fileName);
             return true;
         } catch (Exception ex) {
-            System.out.println("There was an error trying to write " + fileName);
+            Logger.addLog("There was an error trying to write to" + fileName);
+            System.out.println("There was an error trying to write to" + fileName);
             ex.printStackTrace();
             return false;
         }

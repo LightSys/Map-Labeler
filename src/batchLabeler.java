@@ -31,23 +31,18 @@ public class batchLabeler {
                     }
                     catch(IllegalArgumentException e){
                         e.printStackTrace();
-                        System.out.println("could not label" + fileName + "the label was too big to fit the picture");
+                        Logger.addLog("could not label" + fileName + "the label was too big to fit the picture");
                     }
                 }
                 else{
-                    System.out.println("Was not able to find both FileName and CountryName from line: " + line);
+                    Logger.addLog("Was not able to find both FileName and CountryName from line: " + line);
                 }
             }
         }
         catch (IOException e) {
-            System.out.println("Error looks like File can't be read");
+            Logger.addLog("Error looks like " + csvName + " can't be read");
         }
     }
     public static void main(String[] args){
-        String csvName = "maps.csv";
-        String mapsLoc = "maps/";
-//        batchLabeler(csvName, mapsLoc);
-        //todo mkdir for output use other method from FileNameToCountrNAme
-
     }
 }

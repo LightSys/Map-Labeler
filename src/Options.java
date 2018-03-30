@@ -254,15 +254,17 @@ public class Options {
     private static void setFontSize(String size) {
         int chosenFontSize = 0;
         if (size.equals("")) {
-            System.out.println("-s requires an integer argument");
+            System.out.println("Could not set font size because -s requires an integer argument");
         } else {
             try {
                 chosenFontSize = Integer.parseInt(size);
             } catch (NumberFormatException e) {
+                Logger.addLog("Could not set font size to" + size);
                 System.out.println("Cannot set font size to " + size);
             }
         }
         if (chosenFontSize < 1) {
+            Logger.addLog("Using default font size");
             System.out.println("Using default font size");
         } else {
             setFontSize(chosenFontSize);
@@ -271,6 +273,7 @@ public class Options {
 
     private static void setFontName(String name) {
         if (name.equals("")) {
+            Logger.addLog("Could not set font name because -f requires a text argument.");
             System.out.println("-f requires a text argument.");
         } else {
             boolean found = false;
@@ -284,6 +287,7 @@ public class Options {
             if (found) {
                 font = new Font(name, font.getStyle(), font.getSize());
             } else {
+                Logger.addLog("Could not set font to " + name + "use -font to get a list of valid fonts");
                 System.out.println("Cannot set font to " + name);
             }
         }
@@ -292,16 +296,19 @@ public class Options {
     private static void setXPaddingScale(String scale) {
         double chosenXPaddingScale = 0;
         if (scale.equals("")) {
+            Logger.addLog("Could not set x padding scale because -px requires an integer argument");
             System.out.println("-px requires an integer argument");
         } else {
             try {
                 chosenXPaddingScale = Double.parseDouble(scale);
             } catch (NumberFormatException e) {
+                Logger.addLog("Could not set x padding scale to " + scale);
                 System.out.println("Cannot set x padding scale to " + scale);
             }
         }
         if (chosenXPaddingScale < 1.0) {
-            System.out.println("Using default font size");
+            Logger.addLog("Using default x padding scale");
+            System.out.println("Using default x padding scale");
         } else {
             padXScale = chosenXPaddingScale;
         }
@@ -310,16 +317,19 @@ public class Options {
     private static void setYPaddingScale(String scale) {
         double chosenYPaddingScale = 0;
         if (scale.equals("")) {
+            Logger.addLog("Could not set y padding scale because -py requires an integer argument");
             System.out.println("-py requires an integer argument");
         } else {
             try {
                 chosenYPaddingScale = Double.parseDouble(scale);
             } catch (NumberFormatException e) {
+                Logger.addLog("Could not set y padding scale to " + scale);
                 System.out.println("Cannot set y padding scale to " + scale);
             }
         }
         if (chosenYPaddingScale < 1.0) {
-            System.out.println("Using default font size");
+            Logger.addLog("Using default y padding scale");
+            System.out.println("Using default y padding scale");
         } else {
             padYScale = chosenYPaddingScale;
         }
@@ -354,11 +364,13 @@ public class Options {
     private static void setXLocation(String loc) {
         int chosenXLoc = -1;
         if (loc.equals("")) {
+            Logger.addLog("Could not set location x because -lx requires an integer argument");
             System.out.println("-lx requires an integer argument");
         } else {
             try {
                 chosenXLoc = Integer.parseInt(loc);
             } catch (NumberFormatException e) {
+                Logger.addLog("Could not set location x to " + loc);
                 System.out.println("Cannot set location x to " + loc);
             }
         }
@@ -369,11 +381,13 @@ public class Options {
     private static void setYLocation(String loc) {
         int chosenYLoc = -1;
         if (loc.equals("")) {
+            Logger.addLog("Could not set location y -ly requires an integer argument");
             System.out.println("-ly requires an integer argument");
         } else {
             try {
                 chosenYLoc = Integer.parseInt(loc);
             } catch (NumberFormatException e) {
+                Logger.addLog("Could not set location y to " + loc);
                 System.out.println("Cannot set location y to " + loc);
             }
         }
@@ -384,16 +398,19 @@ public class Options {
     private static void setAlpha(String strAlpha) {
         float chosenAlpha = -1;
         if (strAlpha.equals("")) {
+            Logger.addLog("Could not set alpha because -a requires a float argument");
             System.out.println("-a requires a float argument");
         } else {
             try {
                 chosenAlpha = Float.parseFloat(strAlpha);
             } catch (NumberFormatException e) {
+                Logger.addLog("Could not set alpha to " + strAlpha);
                 System.out.println("Cannot set alpha to " + strAlpha);
             }
         }
         if (chosenAlpha < 0 && chosenAlpha > 1) {
-            System.out.println("Using default font size");
+            Logger.addLog("Using default alpha");
+            System.out.println("Using default alpha");
         } else {
             Options.color = new Color(Options.color.getRed(), Options.color.getGreen(), Options.color.getBlue(), (int)(chosenAlpha*255));
         }

@@ -20,6 +20,9 @@ public class makeDirectory {
             if(result) {
                 System.out.println("DIR created");
             }
+            else{
+                Logger.addLog("DIR: " + dirName + " was unable to be made");
+            }
         }
     }
 }
