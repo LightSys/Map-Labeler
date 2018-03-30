@@ -10,8 +10,8 @@ Automated Map Labeler Code-a-thon 2018
 ### Label a single map:  
 The program will read the image from the map-filename, 
 place the label on it, and output the file to the output directory.
-Make sure the file has one of the supported extensions: .gif, .jpg,   
-(TODO LIST HERE)
+Make sure the file has one of the supported extensions: .gif, .jpg, .png, .bmp   
+
 ```
 java Labeler <map-filename> <label>
 ```  
@@ -41,7 +41,9 @@ Example
 java Labeler maps-with-names.csv
 ```
 
-### Label multiple maps in a directory:  
+(TODO, tell them to add location??)
+
+### Label multiple maps in a directory:  (Currently NOT supported)
 The program will read each image in the directory, 
 place labels on them based on the filenames, and output the files to the output directory.  
 The files in the directory should be named with the desired label 
@@ -67,22 +69,40 @@ This will result in the following output directory
 ## Option Flags:
 The following option flags can be used with any of the above 3 labelling methods.
 
-### ```-i```  
+### ```-watermark```  
+If this flag is present, the label(s) will be written in bold in large letters in a block font (Sans Serif) with a low alpha 
+Changing any of these value manually will override this flag
+```
+java Labeler aruba-map.gif Aruba -watermark
+```
 
+### ```-factbook```  
+If this flag is present, the label(s) will be written target the color that is usually land in the world fact book images
+Changing target color will override this flag
+```
+java Labeler aruba-map.gif Aruba -factbook
+```
+
+### ```-center```  
+If this flag is present, the label(s) will be centered
+-lx and -ly flags will be ignored if this flag is present
+```
+java Labeler aruba-map.gif Aruba -factbook
+```
+
+### ```-i```  
 If this flag is present, the label(s) will be written in italics.
 ```
 java Labeler aruba-map.gif Aruba -i
 ```
 
 ### ```-b```  
-
 If this flag is present, the label(s) will be written in bold.
 ```
 java Labeler aruba-map.gif Aruba -b
 ```
 
 ### ```-n```  
-
 If this flag is present, double spaces will be interpreted as a new line.
 ```
 java Labeler usa-map.gif "United States  of  America" -n
@@ -123,6 +143,48 @@ The default y padding scale is 1.5
 java Labeler aruba-map.gif Aruba -py 2.1
 ```
 
+### ```-c <text-color>```
+If this flag is present, the label(s)'s color will be set to text color
+The color can be given as a text using standard java colors. (Look [here](https://docs.oracle.com/javase/7/docs/api/java/awt/Color.html) for a list of colors)  
+(Note -- Text color is not currently supported for .gif files)
+```
+java Labeler aruba-map.gif Aruba -c cyan
+```
+
+You can also specify color using hex values
+```
+java Labeler aruba-map.gif Aruba -c 0x00ffff
+```
+
+### ```-lx <x-location>```
+If this flag is present, the label(s) will touch the specified x coordinate on the file
+```
+java Labeler aruba-map.gif Aruba -lx 640
+```
+
+### ```-ly <y-location>```
+If this flag is present, the label(s) will touch the specified y coordinate on the file
+```
+java Labeler aruba-map.gif Aruba -ly 512
+```
+
+### ```-a <alpha-value>```
+If this flag is present, the label(s) will be set to the specified alpha (0 is transparent, 1 is opaque) 
+```
+java Labeler aruba-map.gif Aruba -a .45
+```
+
+### ```-tc <target-color```
+If this flag is present, the label(s) will be more likely to contain more of the target color
+```
+java Labeler aruba-map.gif Aruba -tc cyan
+```
+
+You can also specify color using hex values
+```
+java Labeler aruba-map.gif Aruba -tc 0x00ffff
+```
+
 ## Additional Option Flags  
 The following flags should be used without any other arguments.  
 The program will display information, and leave files unchanged.
@@ -145,8 +207,8 @@ Get a listing of valid file extensions.
 java Labeler -ext
 ```
 
-##Examples
-aruba-map.gif
+## Examples  
+aruba-map.gif (C:\Users\jbern\IdeaProjects\Map-Labeler\aa-map.gif)
 
 
 usa-map.gif
