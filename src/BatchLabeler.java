@@ -66,7 +66,4 @@ public class BatchLabeler {
             Logger.addLog(message);
         }
     }
-
-    public static void main(String[] args){
-    }
 }
