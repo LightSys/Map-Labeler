@@ -13,7 +13,8 @@ public class Options {
     public enum InfoType {HELP, FONT, EXTENSION}
 
     public static final String[] EXTENSIONS = {".csv", ".gif", ".jpg", ".png", ".bmp"};
-    public static final double SCORE_THRESHOLD = -10.0;
+    public static final double SCORE_THRESHOLD = -1.0;
+    public static final double TC_SCORE_THRESHOLD = -15.0;
 
     public static double padXScale = 1.2;
     public static double padYScale = 1.5;
