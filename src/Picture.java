@@ -296,12 +296,19 @@ public class Picture
         }
         boxSize.h -= heightOffset;
         ScorePoint sp = getBestBoxPosition(boxSize);
+
         if (Options.debug) {
             drawBox(sp.getP().getX(), sp.getP().getY(), boxSize.w, boxSize.h);
             System.out.println(sp.getScore());
         }
         sp.getP().translate(0, -heightOffset);
         drawPaddedLabel(strings, font, sp.getP(), boxSize, Options.padYScale);
+        double scorePerPixel = sp.getScore()/boxSize.area();
+        System.out.println(scorePerPixel);
+        if (scorePerPixel < Options.SCORE_THRESHOLD){
+            System.out.println("Warning: " + getFileName() + " might not be labeled well.");
+            Logger.addLog("Warning: Label on " + getFileName() + " is noisy. Consider inspecting output file.");
+        }
         return true;
    }
 
