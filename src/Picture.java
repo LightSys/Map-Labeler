@@ -276,6 +276,7 @@ public class Picture
             strings = text.split("\\s\\s+");
         }
         Dimension boxSize = getBoxSize(strings, font, Options.padXScale, Options.padYScale);
+        Font prevFont = font;
         if (!boxSize.fitsInside(getWidth(), getHeight())) {
             System.out.println("Label doesn't fit. Shrinking font size...");
             Logger.addLog("Label doesn't fit " + fileName + ". Shrinking font size...");
@@ -314,6 +315,7 @@ public class Picture
                 Logger.addLog("Warning: Label on " + getFileName() + " is noisy. Consider inspecting output file.");
             }
         }
+        Options.font = prevFont;
         return true;
    }
 
