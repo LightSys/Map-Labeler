@@ -145,7 +145,6 @@ java Labeler aruba-map.gif Aruba -py 2.1
 ### ```-c <text-color>```
 If this flag is present, the label(s)'s color will be set to text color
 The color can be given as a text using standard java colors. (Look [here](https://docs.oracle.com/javase/7/docs/api/java/awt/Color.html) for a list of colors)  
-(Note -- Text color is not currently supported for .gif files)
 ```
 java Labeler aruba-map.gif Aruba -c cyan
 ```
@@ -174,12 +173,14 @@ java Labeler aruba-map.gif Aruba -a .45
 ```
 
 ### ```-tc <target-color```
-If this flag is present, the label(s) will be more likely to contain more of the target color
+If this flag is present, the label(s) will be more likely to contain more of the target color  
+The color can be given as a text using standard java colors. (Look [here](https://docs.oracle.com/javase/7/docs/api/java/awt/Color.html) for a list of colors)  
 ```
 java Labeler aruba-map.gif Aruba -tc cyan
 ```
 
-You can also specify color using hex values
+You can also specify color using hex values.  
+It is expected but not required that you find the exact color you are targeting.
 ```
 java Labeler aruba-map.gif Aruba -tc 0x00ffff
 ```

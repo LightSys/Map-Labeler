@@ -134,7 +134,7 @@ public class Picture
             System.out.println("There was an error trying to open " + fileName);
             Logger.addLog("There was an error trying to open " + fileName);
             bufferedImage = new BufferedImage(600,200,
-                    BufferedImage.TYPE_INT_RGB);
+                    BufferedImage.TYPE_INT_ARGB);
             addMessage("Couldn't load " + fileName, new Font("Helvetica",Font.BOLD,16),5,100);
             return false;
         }
@@ -149,16 +149,20 @@ public class Picture
      */
     public void addMessage(String message, Font font, int xPos, int yPos)
     {
-        // get a graphics context to use to draw on the buffered image
-        Graphics2D graphics2d = bufferedImage.createGraphics();
+        BufferedImage newImg = new BufferedImage(
+                getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
 
-        graphics2d.setPaint(Options.color);
+        Graphics2D graphics2d = newImg.createGraphics();
+        graphics2d.drawImage(bufferedImage, 0, 0, null);
+
+        graphics2d.setColor(Options.color);
 
         graphics2d.setFont(font);
 
         // draw the message
         graphics2d.drawString(message,xPos,yPos);
 
+        bufferedImage = newImg;
     }
 
     /**
@@ -370,4 +374,6 @@ public class Picture
 
         return new Dimension(w, h);
     }
+
+
 }
