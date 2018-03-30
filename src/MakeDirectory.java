@@ -20,9 +20,6 @@ public class MakeDirectory {
             if(result) {
                 System.out.println("DIR created");
             }
-            else{
-                Logger.addLog("DIR: " + dirName + " was unable to be made");
-            }
         }
     }
     public static boolean checkDirExists(String dirName) {
