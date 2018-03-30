@@ -238,20 +238,20 @@ The following line will not output any image and instead will print out a list o
 java Labeler aruba-map.gif Aruba -f "Arial" -s 32 -b -i -font
 ```
 Output: (this will vary by machine)
-AR BERKLEY
-AR BLANCA
-AR BONNIE
-AR CARTER
-AR CENA
-AR CHRISTY
-AR DARLING
-AR DECODE
-AR DELANEY
-AR DESTINE
-AR ESSENCE
-AR HERMANN
-AR JULIAN
-Arial
-Arial Black
+AR BERKLEY  
+AR BLANCA  
+AR BONNIE  
+AR CARTER  
+AR CENA  
+AR CHRISTY  
+AR DARLING  
+AR DECODE  
+AR DELANEY  
+AR DESTINE  
+AR ESSENCE  
+AR HERMANN  
+AR JULIAN  
+Arial  
+Arial Black  
 (etc)
 
