@@ -138,26 +138,37 @@ public class FileNameToCountryName {
         System.out.println("Number of Map images: " + numMaps);
     }
 
-    public static void main(String[] args) throws Exception {
+    /**
+     * Main takes in two arguments in the form ["factbook1.zip","outputFolder"]
+     * @param args String[]
+     * @throws Exception
+     */
+    public static String[] runProcess(String[] args) throws Exception {
+        String factbookName = args[0];
+        String outputDir = args[1];
+
         //check input line File
         if(args.length == 0){
             System.out.println("No File was given!");
             System.out.println("Please input location of factbook.zip");
-            return;
+            return null;
         }
         // Print Input
-        System.out.println("Input: " + args[0]);
+        System.out.println("Input: " + factbookName);
         // Declare factbook as the input given for the factbook zip
-        ZipFile factbook = new ZipFile(args[0]);
+        ZipFile factbook = new ZipFile(factbookName);
         // Make /maps dir for map .gif's to be extracted to
-        MakeDirectory.makeNewDir("maps");
+        String newDirName = outputDir + "unlabeled-maps";
+        MakeDirectory.makeNewDir(newDirName);
         // Get the maps from the factbook and unzip them to /maps
         unzipMaps(factbook);
         //make csv for XX-map.gif -> country name
         createCSV(factbook);
         //test CSV with extracted Maps :)
-        String csvName = "maps.csv";
+        String csvName = "factbookCountryMaps.csv";
         testCSV(csvName);
+        String[] CSVAndUnlabeledMapsDir = {csvName, newDirName};
+        return CSVAndUnlabeledMapsDir;
     }
 
     private static void testCSV(String csvName) {
@@ -165,6 +176,7 @@ public class FileNameToCountryName {
         //list files in maps/
         System.out.println("Printing Folder maps/ Contents:");
         ArrayList<String> mapsWithoutNames = new ArrayList<>();
+        //todo fix
         final File folder = new File("maps/");
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             mapsWithoutNames.add(fileEntry.getName());
