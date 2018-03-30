@@ -63,7 +63,7 @@ public class Options {
         if (dirName == null || dirName.isEmpty()) {
             throw new IllegalArgumentException("No directory name was given");
         }
-        if (!makeDirectory.checkDirExists(dirName)){
+        if (!MakeDirectory.checkDirExists(dirName)){
             throw new IllegalArgumentException("Directory does not exist: " + dirName);
         }
         inputDirectory = dirName;

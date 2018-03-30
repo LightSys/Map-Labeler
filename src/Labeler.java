@@ -16,8 +16,7 @@ public class Labeler {
                 labelPicture(Options.inputFile, Options.text);
                 break;
             case CSV:
-                System.out.println("Print CSV");
-                //setup
+                System.out.println("Input mode CSV");
                 String csvName = Options.inputFile;
                 String mapsLoc = "";
                 if (args.length > 1) mapsLoc = args[1];
@@ -25,7 +24,7 @@ public class Labeler {
                 BatchLabeler.ProcessCSV(csvName, Options.inputDirectory);
                 break;
             case DIRECTORY:
-                System.out.println("Print directory");
+                System.out.println("Input mode directory");
                 //setup
                 //run many
                 break;

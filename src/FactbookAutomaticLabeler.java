@@ -18,19 +18,19 @@ public class FactbookAutomaticLabeler {
         String outputDirectory;
 
 
-        if(args.length && args.length <= 2 ){
-
-        }
-
-        else{
-            System.out.println("Input Error");
-            if(args.length == 0){
-                System.out.println("No Input was given!");
-            }
-            System.out.println("Input should be location of factbook.zip, and an output folder name");
-            System.out.println("If no output folder is given, output will be placed where application is run");
-            return;
-        }
+//        if(args.length && args.length <= 2 ){
+//
+//        }
+//
+//        else{
+//            System.out.println("Input Error");
+//            if(args.length == 0){
+//                System.out.println("No Input was given!");
+//            }
+//            System.out.println("Input should be location of factbook.zip, and an output folder name");
+//            System.out.println("If no output folder is given, output will be placed where application is run");
+//            return;
+//        }
 
     }
 }
