@@ -307,13 +307,13 @@ public class Picture
         if (Options.targetColor == null){
             if (scorePerPixel < Options.SCORE_THRESHOLD){
                 System.out.println("Warning: " + getFileName() + " might not be labeled well.");
-                scorePerPixel = scorePerPixel - Options.SCORE_THRESHOLD;
+                scorePerPixel = -(scorePerPixel - Options.SCORE_THRESHOLD);
                 Logger.addLog("Warning: Label on " + getFileName() + " is noisy. Consider inspecting output file. Severity: " + Math.round(scorePerPixel * 100)/100.0);
             }
         } else {
             if (scorePerPixel < Options.TC_SCORE_THRESHOLD){
                 System.out.println("Warning: " + getFileName() + " might not be labeled well.");
-                scorePerPixel = scorePerPixel - Options.TC_SCORE_THRESHOLD;
+                scorePerPixel = -(scorePerPixel - Options.TC_SCORE_THRESHOLD);
                 Logger.addLog("Warning: Label on " + getFileName() + " is noisy. Consider inspecting output file. Severity: " + Math.round(scorePerPixel * 100)/100.0);
             }
         }
