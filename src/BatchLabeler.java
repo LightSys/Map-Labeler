@@ -57,7 +57,7 @@ public class BatchLabeler {
                 }
                 catch(IllegalArgumentException e){
                     e.printStackTrace();
-                    Logger.addLog("could not label" + fileName + "the label was too big to fit the picture");
+                    Logger.addLog(fileName + ": " + e.getMessage());
                 }
             }
         } else {

@@ -31,8 +31,6 @@ public class Labeler {
                 BatchLabeler.ProcessDir(Options.inputDirectory);
                 break;
         }
-        System.out.println(Options.font.getSize());
-        System.out.println(Options.font.getSize2D());
     }
 
     public static void labelPicture(String inFileName, String labelText) {
