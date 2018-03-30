@@ -34,6 +34,8 @@ public class Options {
     public static int locationY = -1;
     public static Color targetColor = null;
 
+    public static boolean centerLabel = false;
+
     public static final Color FB_LAND_COLOR = new Color(255, 240, 222);
 
 
@@ -87,6 +89,9 @@ public class Options {
         }
         if (argsContainsFlag("-factbook")) { //gets overridden by target color
             targetColor = Options.FB_LAND_COLOR;
+        }
+        if (argsContainsFlag("-center")) { //gets overridden by target color
+            centerLabel = true;
         }
 
         argList.add(""); // avoid index out of bounds
@@ -175,21 +180,25 @@ public class Options {
         font = new Font(font.getName(), font.getStyle() | Font.ITALIC, font.getSize());
     }
 
-    private static void setFontSize(int size) {
+    public static void setFontSize(int size) {
         font = new Font(font.getName(), font.getStyle(), size);
     }
 
-    public static void shrinkFontToFit(Picture pic) {
-        int origW = pic.getDisplayWidth(text, font);
+    public static void shrinkFontToFit(Picture pic, String displayText, int numStrings) {
+        int origW = pic.getDisplayWidth(displayText, font);
         int origH = font.getSize();
         int w = (int) (Options.padXScale * origW);
         int h = (int) (Options.padYScale * origH);
+        int yPadding = h - origH;
+        h = (origH * numStrings) + yPadding;
         while (w >= pic.getWidth() || (h >= pic.getHeight())){
             setFontSize(font.getSize()-1);
-            origW = pic.getDisplayWidth(text, font);
+            origW = pic.getDisplayWidth(displayText, font);
             origH = font.getSize();
             w = (int) (Options.padXScale * origW);
             h = (int) (Options.padYScale * origH);
+            yPadding = h - origH;
+            h = (origH * numStrings) + yPadding;
         }
     }
 

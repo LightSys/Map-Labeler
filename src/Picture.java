@@ -167,7 +167,7 @@ public class Picture
     /**
      * Method to draw a string at the given location on the picture
      * @param text the text to draw
-     * @param xPos the left x for the text
+     * @param xPos the center x for the text
      * @param yPos the top y for the text
      */
     public void drawString(String text, Font font, int xPos, int yPos)
@@ -266,7 +266,45 @@ public class Picture
         return scoreBoxes.getBestBoxLocation();
     }
 
-   public boolean writeLabel() {
+    public boolean writeCenteredLabel() { //no padding
+        Font font = Options.font;
+        String text = Options.text;
+        int origH = font.getSize();
+        String[] strings;
+        if (Options.newLine)
+            strings = text.split("\\s\\s+");
+        else
+            strings = new String[] {text};
+        int maxW = 0;
+        String longestStr = "";
+        for (String s : strings){
+            int w = getDisplayWidth(s, font);
+            if (w > maxW){
+                longestStr = s;
+                maxW = w;
+            }
+        }
+        int h = origH * strings.length;
+        int w = getDisplayWidth(longestStr, font);
+        if (w > this.getWidth() || h > this.getHeight()) {
+            //throw new IllegalArgumentException("Label is too wide! Lower padding, font size, or text length.");
+            System.out.println("Label doesn't fit. Shrinking font size...");
+            Options.shrinkFontToFit(this, longestStr, strings.length);
+            font = Options.font;
+            maxW = getDisplayWidth(longestStr, font);
+            origH = font.getSize();
+            h = (origH * strings.length);
+            w = (int) (Options.padXScale * maxW);
+        }
+        font = Options.font;
+
+        for (int i = 0; i < strings.length; i++) {
+            drawString(strings[i], font, getWidth()/2, (getHeight()/2 - h/2) + (i * origH));
+        }
+        return true;
+    }
+
+    public boolean writeLabel() {
        Font font = Options.font;
        String text = Options.text;
        int origW = getDisplayWidth(text, font);
@@ -277,7 +315,7 @@ public class Picture
            if (w > this.getWidth() || (h > this.getHeight())) {
 //               throw new IllegalArgumentException("Label doesn't fit! Lower padding, font size, or text length.");
                System.out.println("Label doesn't fit. Shrinking font size...");
-               Options.shrinkFontToFit(this);
+               Options.shrinkFontToFit(this, text, 1);
                font = Options.font;
                origW = getDisplayWidth(text, font);
                origH = font.getSize();
@@ -296,21 +334,29 @@ public class Picture
            String[] splitted = text.split("\\s\\s+"); //split on 2 spaces
            int[] widths = new int[splitted.length];
            int maxW = 0;
+           int maxI = 0;
            for (int i = 0; i < splitted.length; i++) {
                widths[i] = getDisplayWidth(splitted[i], font);
                if (maxW < widths[i]) {
                    maxW = widths[i];
+                   maxI = i;
                }
            }
            int h = (int) (Options.padYScale * origH);
            int yPadding = h - origH;
            h = (origH * splitted.length) + yPadding;
            int w = (int) (Options.padXScale * maxW);
-           if (w > this.getWidth()) {
-               throw new IllegalArgumentException("Label is too wide! Lower X padding, font size, or text length.");
-           }
-           if (h > this.getHeight()) {
-               throw new IllegalArgumentException("Label is too tall! Lower Y padding, font size, or use fewer lines.");
+           if (w > this.getWidth() || h > this.getHeight()) {
+               //throw new IllegalArgumentException("Label is too wide! Lower padding, font size, or text length.");
+               System.out.println("Label doesn't fit. Shrinking font size...");
+               Options.shrinkFontToFit(this, splitted[maxI], splitted.length);
+               font = Options.font;
+               maxW = getDisplayWidth(splitted[maxI], font);
+               origH = font.getSize();
+               h = (int) (Options.padYScale * origH);
+               yPadding = h - origH;
+               h = (origH * splitted.length) + yPadding;
+               w = (int) (Options.padXScale * maxW);
            }
            ScorePoint sp = getBestBoxPosition(w, h);
            if (Options.debug) {
