@@ -208,7 +208,7 @@ java Labeler -ext
 ```
 
 ## Examples  
-![aruba-map.gif] (https://github.com/LightSys/Map-Labeler/blob/JacobREADME/aruba-map.gif)
+![aruba-map.gif](https://github.com/LightSys/Map-Labeler/blob/JacobREADME/aruba-map.gif)
 
 
 usa-map.gif
