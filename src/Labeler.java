@@ -20,7 +20,7 @@ public class Labeler {
                 //setup
                 String csvName = Options.inputFile;
                 String mapsLoc = "maps/";
-                batchLabeler.ProcessCSV(csvName, mapsLoc);
+                BatchLabeler.ProcessCSV(csvName, mapsLoc);
                 break;
             case DIRECTORY:
                 System.out.println("Print directory");

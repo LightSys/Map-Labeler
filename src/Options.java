@@ -63,6 +63,7 @@ public class Options {
 
         if (argList.isEmpty()) {
             System.out.println("Labeler requires arguments\nUse the -help flag for more information");
+            Logger.addLog("Labeler requires arguments\nUse the -help flag for more information");
             System.exit(0);
         }
 
@@ -255,6 +256,7 @@ public class Options {
         int chosenFontSize = 0;
         if (size.equals("")) {
             System.out.println("Could not set font size because -s requires an integer argument");
+            Logger.addLog("Could not set font size because -s requires an integer argument");
         } else {
             try {
                 chosenFontSize = Integer.parseInt(size);

@@ -3,8 +3,8 @@ import java.io.File;
 Created by Will Kercher 2/29/18
 Purpose: Takes in a string and creates a directory named after that string, if directory exists doesn't do anything SWAG!
  */
-public class makeDirectory {
-    public makeDirectory(){}
+public class MakeDirectory {
+    public MakeDirectory(){}
     public static void makeNewDir(String dirName) {
         File theDir = new File(dirName);
         // if the directory does not exist, create it
