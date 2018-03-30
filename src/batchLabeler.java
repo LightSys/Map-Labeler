@@ -26,7 +26,7 @@ public class batchLabeler {
                 if(fileNameMatcher.find() && countryNameMatcher.find()){
                     String fileName = fileNameMatcher.group(0);
                     String countryName = countryNameMatcher.group(0);
-                    LabelerMain.labelPicture(mapsLoc+fileName,countryName);
+                    Labeler.labelPicture(mapsLoc+fileName,countryName);
                 }
                 else{
                     System.out.println("Was not able to find both FileName and CountryName from line: " + line);

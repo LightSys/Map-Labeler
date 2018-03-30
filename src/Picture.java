@@ -262,8 +262,8 @@ public class Picture
      * @return a ScorePoint with top left corner of the label position and the score
      */
     public ScorePoint getBestBoxPosition(int w, int h) {
-        NoiseBoxes noiseBoxes = new NoiseBoxes(this, w, h);
-        return noiseBoxes.getBestBoxLocation();
+        ScoreBoxes scoreBoxes = new ScoreBoxes(this, w, h);
+        return scoreBoxes.getBestBoxLocation();
     }
 
    public boolean writeLabel() {

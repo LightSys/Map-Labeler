@@ -3,7 +3,7 @@ import java.awt.*;
 /**
  * Created by Edric on 3/26/2018.
  */
-public class LabelerMain {
+public class Labeler {
 
     public static void main(String[] args){
         Options.setOptions(args);

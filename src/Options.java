@@ -32,7 +32,6 @@ public class Options {
     public static ArrayList<String> argList;
     public static int locationX = -1;
     public static int locationY = -1;
-    public static float alpha = 1.0f;
     public static Color targetColor = null;
 
     public static final Color FB_LAND_COLOR = new Color(255, 240, 222);
@@ -71,6 +70,12 @@ public class Options {
 
         setTextIfSingle();
 
+        if (argsContainsFlag("-watermark")) { //gets overridden by everything
+            setFontBold();
+            setFontName("SansSerif");
+            setFontSize(42);
+            setAlpha(".5");
+        }
         if (argsContainsFlag("-b")) {
             setFontBold();
         }
@@ -80,7 +85,7 @@ public class Options {
         if (argsContainsFlag("-n")) {
             newLine = true;
         }
-        if (argsContainsFlag("-factbook")) {
+        if (argsContainsFlag("-factbook")) { //gets overridden by target color
             targetColor = Options.FB_LAND_COLOR;
         }
 
@@ -143,6 +148,7 @@ public class Options {
         System.out.println("Font Size set to " + font.getSize());
         System.out.println("Font set to " + font.getName());
         System.out.println("Font Color set to " + color);
+        System.out.println("Font Alpha set to " + getAlpha());
         System.out.println("Padding X Scale set to " + padXScale);
         System.out.println("Padding Y Scale set to " + padYScale);
 
@@ -151,6 +157,10 @@ public class Options {
         if (locationX != -1){System.out.println("Location X set to " + locationX);}
         else {System.out.println("No specific Location X set");}
         System.out.println("Target Color set to " + targetColor);
+    }
+
+    private static double getAlpha() {
+        return Math.round(color.getAlpha()/255.0 * 100)/100.0;
     }
 
     private static void setFontPlain() {
@@ -376,7 +386,6 @@ public class Options {
         if (chosenAlpha < 0 && chosenAlpha > 1) {
             System.out.println("Using default font size");
         } else {
-            System.out.println(chosenAlpha*255);
             Options.color = new Color(Options.color.getRed(), Options.color.getGreen(), Options.color.getBlue(), (int)(chosenAlpha*255));
         }
     }

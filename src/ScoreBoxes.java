@@ -1,8 +1,7 @@
 /**
  * Created by Edric on 3/27/2018.
  */
-//TODO renameme pleaseeee; thx
-public class NoiseBoxes {
+public class ScoreBoxes {
     NoisePoint[][] nPixels;
     Double[][] boxNoise;
     private Point center;
@@ -10,7 +9,7 @@ public class NoiseBoxes {
     private int w;
     private int h;
 
-    public NoiseBoxes(Picture pic, int boxW, int boxH){
+    public ScoreBoxes(Picture pic, int boxW, int boxH){
         this.w = boxW;
         this.h = boxH;
 
