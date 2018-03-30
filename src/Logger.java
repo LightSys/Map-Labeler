@@ -48,7 +48,7 @@ public class Logger {
                 e.printStackTrace();
             }
             if(result) {
-                System.out.println("Log created: " + logName);
+                //System.out.println("Log created: " + logName);
             }
         }
     }

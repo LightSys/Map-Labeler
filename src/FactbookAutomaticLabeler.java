@@ -1,13 +1,15 @@
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 /**************************************************
  * Created by Will Kercher 3/30/18
  * ************************************************/
 
 public class FactbookAutomaticLabeler {
     FactbookAutomaticLabeler(){}
+
+    static void printInputError(){
+        System.out.println("Input Error");
+        System.out.println("Input should be: file/path/factbook.zip, and an optional output folder name!");
+        System.out.println("If no output folder is given, output will be placed where application is run");
+    }
 
     /**This Java application is designed as an automated process
      * for labeling all the maps in the CIA World Factbook.
@@ -18,6 +20,7 @@ public class FactbookAutomaticLabeler {
      *             and args[1] should be location of output folder
      */
     public static void main(String[] args) throws Exception {
+        boolean factbookFound = false;
         String factbookLocation = "";
         String outputDirectory = ""; // current directory
 
@@ -29,9 +32,10 @@ public class FactbookAutomaticLabeler {
                 for (String arg : args) {
                     if (arg.contains(".zip")) {
                         factbookLocation = arg;
+                        factbookFound = true;
                     }
                     else{
-                        outputDirectory = arg;
+                        outputDirectory = arg + "/";
                     }
                 }
                 break;
@@ -40,19 +44,23 @@ public class FactbookAutomaticLabeler {
             case 0:
                 System.out.println("No Input was given!");
             default:
-                System.out.println("Input Error");
-                System.out.println("Input should be location of factbook.zip, and an output folder name");
-                System.out.println("If no output folder is given, output will be placed where application is run");
+                printInputError();
                 return;
+        }
+        // check to make sure you were passed in factbook
+        if(!factbookFound){
+            System.out.println("Factbook Not Found in input");
+            printInputError();
+            return;
         }
         // Make Output Dir
         MakeDirectory.makeNewDir(outputDirectory);
         // Process World Factbook
         String[] input = {factbookLocation, outputDirectory};
         String[] CSVAndMapDir = FileNameToCountryName.runProcess(input);
-        // Run BatchLabeler todo fix second paramater
-        String CSVName = input[0];// the name of the CSV
-        String unlabeledMapsDir = input[1]; //name of the Unlabeled maps folder
+        // Run BatchLabeler
+        String CSVName = CSVAndMapDir[0];// the name of the CSV
+        String unlabeledMapsDir = CSVAndMapDir[1]; //name of the Unlabeled maps folder
         if (CSVAndMapDir != null){
             BatchLabeler.ProcessCSV(CSVName,unlabeledMapsDir);
         }

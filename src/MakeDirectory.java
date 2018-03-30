@@ -8,7 +8,7 @@ public class MakeDirectory {
     public static void makeNewDir(String dirName) {
         File theDir = new File(dirName);
         // if the directory does not exist, create it
-        if (checkDirExists(dirName)) {
+        if (!checkDirExists(dirName)) {//run when Dir does not exist! BIG Money$$
             System.out.println("creating directory: " + theDir.getName());
             boolean result = false;
             try{
@@ -24,6 +24,7 @@ public class MakeDirectory {
     }
     public static boolean checkDirExists(String dirName) {
         File theDir = new File(dirName);
+        //System.out.println(dirName);
         if (theDir.exists() && !theDir.isDirectory()){
             throw new IllegalArgumentException("Cannot create directory. File exists with same name: " + dirName);
         }
