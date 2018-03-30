@@ -16,6 +16,11 @@ public class NoiseBoxes {
 
         int pw = pic.getWidth();
         int ph = pic.getHeight();
+
+        if (Options.locationX >= pw) throw new IllegalArgumentException("Specified X Location is out of bounds.");
+        if (Options.locationX >= ph) throw new IllegalArgumentException("Specified Y Location is out of bounds.");
+
+
         nPixels = new NoisePoint[ph][pw];
         for (int y = 0; y < ph; y++){
             for (int x = 0; x < pw; x++){
@@ -98,7 +103,6 @@ public class NoiseBoxes {
             noise += getHorizontalScore(x, y, w);
         }
         else {
-            System.out.println("first?");
             for (int i = x; i < x + w; i++) {
                 noise += getVerticalScore(i, y, h);
             }

@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import javax.swing.text.html.Option;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.awt.geom.*;
@@ -273,8 +274,15 @@ public class Picture
        if (!Options.newLine) {
            int w = (int) (Options.padXScale * origW);
            int h = (int) (Options.padYScale * origH);
-           if (w > this.getWidth()) {
-               throw new IllegalArgumentException("Label is too wide! Lower X padding, font size, or text length.");
+           if (w > this.getWidth() || (h > this.getHeight())) {
+//               throw new IllegalArgumentException("Label doesn't fit! Lower padding, font size, or text length.");
+               System.out.println("Label doesn't fit. Shrinking font size...");
+               Options.shrinkFontToFit(this);
+               font = Options.font;
+               origW = getDisplayWidth(text, font);
+               origH = font.getSize();
+               w = (int) (Options.padXScale * origW);
+               h = (int) (Options.padYScale * origH);
            }
            if (h > this.getHeight()) {
                throw new IllegalArgumentException("Label is too tall! Lower Y padding, font size, or use fewer lines.");

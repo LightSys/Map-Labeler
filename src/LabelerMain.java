@@ -28,7 +28,6 @@ public class LabelerMain {
                 //run many
                 break;
         }
-        System.out.println("done");
     }
 
     public static void labelPicture(String inFileName, String labelText) {

@@ -32,6 +32,8 @@ public class Options {
     public static ArrayList<String> argList;
     public static int locationX = -1;
     public static int locationY = -1;
+    public static float alpha = 1.0f;
+    public static boolean factbook = false;
 
 
     public Options() throws InstantiationException {
@@ -76,6 +78,9 @@ public class Options {
         if (argsContainsFlag("-n")) {
             newLine = true;
         }
+        if (argsContainsFlag("-factbook")) {
+            factbook = true;
+        }
 
         argList.add(""); // avoid index out of bounds
         if (argsContainsFlag("-s")) {
@@ -106,6 +111,10 @@ public class Options {
             int i = argList.indexOf("-ly");
             setYLocation(argList.get(i + 1));
         }
+        if (argsContainsFlag("-a")) {
+            int i = argList.indexOf("-a");
+            setAlpha(argList.get(i + 1));
+        }
         if (errorMessage != null) {
             inputType = InputType.INFO;
         }
@@ -131,7 +140,9 @@ public class Options {
         System.out.println("Padding Y Scale set to " + padYScale);
 
         if (locationY != -1){System.out.println("Location Y set to " + locationY);}
+        else {System.out.println("No specific Location Y set");}
         if (locationX != -1){System.out.println("Location X set to " + locationX);}
+        else {System.out.println("No specific Location X set");}
     }
 
     private static void setFontPlain() {
@@ -148,6 +159,20 @@ public class Options {
 
     private static void setFontSize(int size) {
         font = new Font(font.getName(), font.getStyle(), size);
+    }
+
+    public static void shrinkFontToFit(Picture pic) {
+        int origW = pic.getDisplayWidth(text, font);
+        int origH = font.getSize();
+        int w = (int) (Options.padXScale * origW);
+        int h = (int) (Options.padYScale * origH);
+        while (w >= pic.getWidth() || (h >= pic.getHeight())){
+            setFontSize(font.getSize()-1);
+            origW = pic.getDisplayWidth(text, font);
+            origH = font.getSize();
+            w = (int) (Options.padXScale * origW);
+            h = (int) (Options.padYScale * origH);
+        }
     }
 
     public static String getExtension(String fileName) {
@@ -326,6 +351,24 @@ public class Options {
         }
         if (chosenYLoc >= 0) {
             locationY = chosenYLoc;
+        }
+    }
+    private static void setAlpha(String strAlpha) {
+        float chosenAlpha = -1;
+        if (strAlpha.equals("")) {
+            System.out.println("-a requires a float argument");
+        } else {
+            try {
+                chosenAlpha = Float.parseFloat(strAlpha);
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot set alpha to " + strAlpha);
+            }
+        }
+        if (chosenAlpha < 0 && chosenAlpha > 1) {
+            System.out.println("Using default font size");
+        } else {
+            System.out.println(chosenAlpha*255);
+            Options.color = new Color(Options.color.getRed(), Options.color.getGreen(), Options.color.getBlue(), (int)(chosenAlpha*255));
         }
     }
 }
