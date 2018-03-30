@@ -167,7 +167,7 @@ public class Picture
      * Method to draw a string at the given location on the picture
      * @param text the text to draw
      * @param xPos the center x for the text
-     * @param yPos the top y for the text
+     * @param yPos the center y for the text
      */
     public void drawString(String text, Font font, int xPos, int yPos)
     {
@@ -269,6 +269,8 @@ public class Picture
     public boolean writeCenteredLabel() { //no padding
         Font font = Options.font;
         String text = Options.text;
+        int heightOffset = font.getSize() - bufferedImage.getGraphics().getFontMetrics(Options.font).getMaxAscent();
+
         int origH = font.getSize();
         String[] strings;
         if (Options.newLine)
@@ -299,17 +301,28 @@ public class Picture
         font = Options.font;
 
         for (int i = 0; i < strings.length; i++) {
-            drawString(strings[i], font, getWidth()/2, (getHeight()/2 - h/2) + (i * origH));
+            int drawY = (getHeight()/2 - h/2 + origH/2) + (i * origH);
+            drawString(strings[i], font, getWidth()/2, drawY);
         }
         return true;
     }
 
     public boolean writeLabel() {
-       Font font = Options.font;
-       String text = Options.text;
-       int origW = getDisplayWidth(text, font);
-       int origH = font.getSize();
-       if (!Options.newLine) {
+        Font font = Options.font;
+        String text = Options.text;
+        int heightOffset = font.getSize() - bufferedImage.getGraphics().getFontMetrics(Options.font).getMaxAscent();
+        System.out.println("HEIGHT OFFSET: " + heightOffset);
+
+        String[] strings;
+        if (Options.newLine)
+            strings = text.split("\\s\\s+");
+        else
+            strings = new String[] {text};
+        Dimension boxSize = getBoxSize(strings, font);
+
+        int origW = getDisplayWidth(text, font);
+        int origH = font.getSize();
+        if (!Options.newLine) {
            int w = (int) (Options.padXScale * origW);
            int h = (int) (Options.padYScale * origH);
            if (w > this.getWidth() || (h > this.getHeight())) {
@@ -382,4 +395,18 @@ public class Picture
         }
     }
 
+    public Dimension getBoxSize(String[] strings, Font font) {
+        int maxW = 0;
+        String longestStr = "";
+        for (String s : strings){
+            int w = getDisplayWidth(s, font);
+            if (w > maxW){
+                longestStr = s;
+                maxW = w;
+            }
+        }
+        int w = getDisplayWidth(longestStr, font);
+        int h = font.getSize() * strings.length;
+        return new Dimension(w, h);
+    }
 }
