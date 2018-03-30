@@ -12,7 +12,6 @@ public class Picture
 
     public Picture(String fileName)
     {
-        System.out.println("Trying to open thing");
         load(fileName);
     }
 
@@ -304,7 +303,7 @@ public class Picture
         sp.getP().translate(0, -heightOffset);
         drawPaddedLabel(strings, font, sp.getP(), boxSize, Options.padYScale);
         double scorePerPixel = sp.getScore()/boxSize.area();
-        if (Options.targetColor != null){
+        if (Options.targetColor == null){
             if (scorePerPixel < Options.SCORE_THRESHOLD){
                 System.out.println("Warning: " + getFileName() + " might not be labeled well.");
                 Logger.addLog("Warning: Label on " + getFileName() + " is noisy. Consider inspecting output file.");
