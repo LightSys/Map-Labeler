@@ -35,8 +35,21 @@ public class NoiseBoxes {
     public ScorePoint getBestBoxLocation() {
         Double best = null;
         Point loc = null;
+
+        boolean restrictX = Options.locationX != -1;
+        boolean restrictY = Options.locationY != -1;
+
         for (int y = 0; y < boxNoise.length; y++) {
             for (int x = 0; x < boxNoise[0].length; x++) {
+                if (restrictX){
+                    if (Options.locationX < x) continue;
+                    if (Options.locationX > x+w) continue;
+                }
+                if (restrictY){
+                    if (Options.locationY < y) continue;
+                    if (Options.locationY > y+h) continue;
+                }
+
                 double score = getBoxScore(x, y);
                 if (best == null || score > best){
                     best = score;
@@ -113,5 +126,9 @@ public class NoiseBoxes {
     private double getScoreForCenterDist(int x, int y) {
         Point p = new Point(x + w/2, y + h/2);
         return -p.distanceTo(center);
+    }
+
+    private boolean contains(Point p, int boxX, int boxY) {
+        return p.inRange(boxX, boxY, w, h);
     }
 }

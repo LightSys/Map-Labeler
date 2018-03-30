@@ -9,7 +9,9 @@ import java.util.Arrays;
  */
 public class Options {
     public enum InputType {SINGLE, DIRECTORY, CSV, INFO}
+
     public enum InfoType {HELP, FONT, EXTENSION}
+
     public static final String[] EXTENSIONS = {".csv", ".gif", ".jpg", ".png", ".bmp"};
 
     public static double padXScale = 1.2;
@@ -23,14 +25,16 @@ public class Options {
     public static InputType inputType = null;
     public static InfoType infoType = null;
     public static String errorMessage = null;
-    public static Color color = null;
+    public static Color color = Color.black;
 
     public static boolean debug = false;
 
     public static ArrayList<String> argList;
+    public static int locationX = -1;
+    public static int locationY = -1;
 
 
-    public Options() throws InstantiationException{
+    public Options() throws InstantiationException {
         throw new InstantiationException("Cannot create instance of Options!");
     }
 
@@ -63,30 +67,44 @@ public class Options {
 
         setTextIfSingle();
 
-        if (argsContainsFlag("-b")) { setFontBold(); }
-        if (argsContainsFlag("-i")) { setFontItalic(); }
-        if (argsContainsFlag("-n")) { newLine = true; }
+        if (argsContainsFlag("-b")) {
+            setFontBold();
+        }
+        if (argsContainsFlag("-i")) {
+            setFontItalic();
+        }
+        if (argsContainsFlag("-n")) {
+            newLine = true;
+        }
 
         argList.add(""); // avoid index out of bounds
         if (argsContainsFlag("-s")) {
             int i = argList.indexOf("-s");
-            setFontSize(argList.get(i+1));
+            setFontSize(argList.get(i + 1));
         }
         if (argsContainsFlag("-f")) {
             int i = argList.indexOf("-f");
-            setFontName(argList.get(i+1));
+            setFontName(argList.get(i + 1));
         }
         if (argsContainsFlag("-px")) {
             int i = argList.indexOf("-px");
-            setXPaddingScale(argList.get(i+1));
+            setXPaddingScale(argList.get(i + 1));
         }
         if (argsContainsFlag("-py")) {
             int i = argList.indexOf("-py");
-            setYPaddingScale(argList.get(i+1));
+            setYPaddingScale(argList.get(i + 1));
         }
         if (argsContainsFlag("-c")) {
             int i = argList.indexOf("-c");
-            setColor(argList.get(i+1));
+            setColor(argList.get(i + 1));
+        }
+        if (argsContainsFlag("-lx")) {
+            int i = argList.indexOf("-lx");
+            setXLocation(argList.get(i + 1));
+        }
+        if (argsContainsFlag("-ly")) {
+            int i = argList.indexOf("-ly");
+            setYLocation(argList.get(i + 1));
         }
         if (errorMessage != null) {
             inputType = InputType.INFO;
@@ -96,10 +114,10 @@ public class Options {
     }
 
     public static void printAllOptions() {
-        if ((font.getStyle() & 1) == 1){
+        if ((font.getStyle() & 1) == 1) {
             System.out.println("Font Style set to Bold.");
         }
-        if ((font.getStyle() & 2) == 2){
+        if ((font.getStyle() & 2) == 2) {
             System.out.println("Font Style set to Italic.");
         }
         if (font.getStyle() == 0) {
@@ -111,17 +129,28 @@ public class Options {
         System.out.println("Font Color set to " + color);
         System.out.println("Padding X Scale set to " + padXScale);
         System.out.println("Padding Y Scale set to " + padYScale);
+
+        if (locationY != -1){System.out.println("Location Y set to " + locationY);}
+        if (locationX != -1){System.out.println("Location X set to " + locationX);}
     }
 
-    private static void setFontPlain(){font = new Font(font.getName(), Font.PLAIN, font.getSize());}
+    private static void setFontPlain() {
+        font = new Font(font.getName(), Font.PLAIN, font.getSize());
+    }
 
-    private static void setFontBold(){font = new Font(font.getName(), font.getStyle() | Font.BOLD, font.getSize());}
+    private static void setFontBold() {
+        font = new Font(font.getName(), font.getStyle() | Font.BOLD, font.getSize());
+    }
 
-    private static void setFontItalic(){font = new Font(font.getName(), font.getStyle() | Font.ITALIC, font.getSize());}
+    private static void setFontItalic() {
+        font = new Font(font.getName(), font.getStyle() | Font.ITALIC, font.getSize());
+    }
 
-    private static void setFontSize(int size){font = new Font(font.getName(), font.getStyle(), size);}
+    private static void setFontSize(int size) {
+        font = new Font(font.getName(), font.getStyle(), size);
+    }
 
-    public static String getExtension(String fileName){
+    public static String getExtension(String fileName) {
         int i = fileName.lastIndexOf('.');
         if (i > 0) {
             String extension = fileName.substring(i);
@@ -140,9 +169,9 @@ public class Options {
     }
 
     public static void processInfoFlag() {
-        if (argsContainsFlag("-help")){
+        if (argsContainsFlag("-help")) {
             infoType = InfoType.HELP;
-        } else if (argsContainsFlag("-font")){
+        } else if (argsContainsFlag("-font")) {
             infoType = InfoType.FONT;
         } else if (argsContainsFlag("-ext")) {
             infoType = InfoType.EXTENSION;
@@ -156,7 +185,7 @@ public class Options {
     private static boolean argsContainsFlag(String flag) {
         if (flag.charAt(0) != '-') return false;
         for (int i = 0; i < argList.size(); i++) {
-            if (argList.get(i).equals(flag) || argList.get(i).equals("-" + flag)){
+            if (argList.get(i).equals(flag) || argList.get(i).equals("-" + flag)) {
                 argList.set(i, flag);
                 return true;
             }
@@ -170,7 +199,7 @@ public class Options {
         }
     }
 
-    private static void setFontSize(String size){
+    private static void setFontSize(String size) {
         int chosenFontSize = 0;
         if (size.equals("")) {
             System.out.println("-s requires an integer argument");
@@ -181,15 +210,14 @@ public class Options {
                 System.out.println("Cannot set font size to " + size);
             }
         }
-        if (chosenFontSize < 1){
+        if (chosenFontSize < 1) {
             System.out.println("Using default font size");
-        }
-        else {
+        } else {
             setFontSize(chosenFontSize);
         }
     }
 
-    private static void setFontName(String name){
+    private static void setFontName(String name) {
         if (name.equals("")) {
             System.out.println("-f requires a text argument.");
         } else {
@@ -209,7 +237,7 @@ public class Options {
         }
     }
 
-    private static void setXPaddingScale(String scale){
+    private static void setXPaddingScale(String scale) {
         double chosenXPaddingScale = 0;
         if (scale.equals("")) {
             System.out.println("-px requires an integer argument");
@@ -220,15 +248,14 @@ public class Options {
                 System.out.println("Cannot set x padding scale to " + scale);
             }
         }
-        if (chosenXPaddingScale < 1.0){
+        if (chosenXPaddingScale < 1.0) {
             System.out.println("Using default font size");
-        }
-        else {
+        } else {
             padXScale = chosenXPaddingScale;
         }
     }
 
-    private static void setYPaddingScale(String scale){
+    private static void setYPaddingScale(String scale) {
         double chosenYPaddingScale = 0;
         if (scale.equals("")) {
             System.out.println("-py requires an integer argument");
@@ -239,28 +266,14 @@ public class Options {
                 System.out.println("Cannot set y padding scale to " + scale);
             }
         }
-        if (chosenYPaddingScale < 1.0){
+        if (chosenYPaddingScale < 1.0) {
             System.out.println("Using default font size");
-        }
-        else {
+        } else {
             padYScale = chosenYPaddingScale;
         }
     }
 
-    private static void setColor(String strColor){
-//        Color c;
-//        try {
-//            Field field = Color.class.getField(strColor);
-//            c = (Color)field.get(null);
-//        } catch (Exception e) {
-//            c = null; // Not defined
-//        }
-//        if (c != null) {
-//            Options.color = c;
-//        }
-//        else {
-//            Options.color = Color.black;
-//        }
+    private static void setColor(String strColor) {
         color = stringToColor(strColor);
     }
 
@@ -282,6 +295,37 @@ public class Options {
                 // if we can't get any color return black
                 return Color.black;
             }
+        }
+    }
+
+    private static void setXLocation(String loc) {
+        int chosenXLoc = -1;
+        if (loc.equals("")) {
+            System.out.println("-lx requires an integer argument");
+        } else {
+            try {
+                chosenXLoc = Integer.parseInt(loc);
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot set location x to " + loc);
+            }
+        }
+        if (chosenXLoc >= 0) {
+            locationX = chosenXLoc;
+        }
+    }
+    private static void setYLocation(String loc) {
+        int chosenYLoc = -1;
+        if (loc.equals("")) {
+            System.out.println("-ly requires an integer argument");
+        } else {
+            try {
+                chosenYLoc = Integer.parseInt(loc);
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot set location y to " + loc);
+            }
+        }
+        if (chosenYLoc >= 0) {
+            locationY = chosenYLoc;
         }
     }
 }
