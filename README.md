@@ -237,6 +237,7 @@ The following line will not output any image and instead will print out a list o
 ```
 java Labeler aruba-map.gif Aruba -f "Arial" -s 32 -b -i -font
 ```
+<<<<<<< HEAD
 Output: (this will vary by machine)
 AR BERKLEY
 AR BLANCA
@@ -254,3 +255,7 @@ AR JULIAN
 Arial
 Arial Black
 (etc)
+=======
+java Labeler aruba-map.gif Aruba -f "Arial" -s 32 -b -i -fonts
+```
+>>>>>>> 443f821e43ece445fdc3013e599297c988b36a09
