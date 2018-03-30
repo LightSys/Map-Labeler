@@ -66,6 +66,9 @@ public class Options {
         if (!MakeDirectory.checkDirExists(dirName)){
             throw new IllegalArgumentException("Directory does not exist: " + dirName);
         }
+        if (dirName.charAt(dirName.length()-1) != '/') {
+            dirName += "/";
+        }
         inputDirectory = dirName;
 
     }
