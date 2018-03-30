@@ -273,9 +273,6 @@ public class Picture
     public boolean writeLabel() {
         Font font = Options.font;
         String text = Options.text;
-        int heightOffset = font.getSize() - bufferedImage.getGraphics().getFontMetrics(Options.font).getMaxAscent();
-        System.out.println("HEIGHT OFFSET: " + heightOffset);
-
         String[] strings = new String[] {text};
         if (Options.newLine) {
             strings = text.split("\\s\\s+");
@@ -289,15 +286,22 @@ public class Picture
             boxSize = getBoxSize(strings, font, Options.padXScale, Options.padYScale);
         }
 
-        if (Options.centerLabel){
+        int heightOffset = 0;
+        if (Options.useHeightOffset){
+            FontMetrics fm = bufferedImage.getGraphics().getFontMetrics(font);
+            heightOffset = font.getSize() - fm.getAscent() + fm.getDescent();
+        }
+        if (Options.centerLabel) {
             drawCenteredPaddedLabel(strings, font, boxSize, Options.padYScale);
             return true;
         }
+        boxSize.h -= heightOffset;
         ScorePoint sp = getBestBoxPosition(boxSize);
         if (Options.debug) {
             drawBox(sp.getP().getX(), sp.getP().getY(), boxSize.w, boxSize.h);
             System.out.println(sp.getScore());
         }
+        sp.getP().translate(0, -heightOffset);
         drawPaddedLabel(strings, font, sp.getP(), boxSize, Options.padYScale);
         return true;
    }

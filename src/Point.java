@@ -51,4 +51,9 @@ public class Point {
         int dy = p.getY() - this.getY();
         return dx*dx + dy*dy;
     }
+
+    public void translate(int xAmt, int yAmt){
+        this.x += xAmt;
+        this.y += yAmt;
+    }
 }

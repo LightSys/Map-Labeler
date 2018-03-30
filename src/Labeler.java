@@ -19,8 +19,10 @@ public class Labeler {
                 System.out.println("Print CSV");
                 //setup
                 String csvName = Options.inputFile;
-                String mapsLoc = "maps/";
-                batchLabeler.ProcessCSV(csvName, mapsLoc);
+                String mapsLoc = "";
+                if (args.length > 1) mapsLoc = args[1];
+                Options.setInputDirectory(mapsLoc);
+                batchLabeler.ProcessCSV(csvName, Options.inputDirectory);
                 break;
             case DIRECTORY:
                 System.out.println("Print directory");

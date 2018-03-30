@@ -35,6 +35,9 @@ public class Options {
     public static Color targetColor = null;
 
     public static boolean centerLabel = false;
+    public static boolean useHeightOffset = true;
+
+    public static String inputDirectory;
 
     public static final Color FB_LAND_COLOR = new Color(255, 240, 222);
 
@@ -54,6 +57,17 @@ public class Options {
             default:
                 inputType = InputType.SINGLE;
         }
+    }
+
+    public static void setInputDirectory(String dirName) {
+        if (dirName == null || dirName.isEmpty()) {
+            throw new IllegalArgumentException("No directory name was given");
+        }
+        if (!makeDirectory.checkDirExists(dirName)){
+            throw new IllegalArgumentException("Directory does not exist: " + dirName);
+        }
+        inputDirectory = dirName;
+
     }
 
     public static void setOptions(String[] args) {
@@ -257,7 +271,7 @@ public class Options {
 
     private static void setFontSize(String size) {
         int chosenFontSize = 0;
-        if (size.equals("")) {
+        if (size.isEmpty()) {
             System.out.println("Could not set font size because -s requires an integer argument");
         } else {
             try {
@@ -276,7 +290,7 @@ public class Options {
     }
 
     private static void setFontName(String name) {
-        if (name.equals("")) {
+        if (name.isEmpty()) {
             Logger.addLog("Could not set font name because -f requires a text argument.");
             System.out.println("-f requires a text argument.");
         } else {
@@ -299,7 +313,7 @@ public class Options {
 
     private static void setXPaddingScale(String scale) {
         double chosenXPaddingScale = 0;
-        if (scale.equals("")) {
+        if (scale.isEmpty()) {
             Logger.addLog("Could not set x padding scale because -px requires an integer argument");
             System.out.println("-px requires an integer argument");
         } else {
@@ -320,7 +334,7 @@ public class Options {
 
     private static void setYPaddingScale(String scale) {
         double chosenYPaddingScale = 0;
-        if (scale.equals("")) {
+        if (scale.isEmpty()) {
             Logger.addLog("Could not set y padding scale because -py requires an integer argument");
             System.out.println("-py requires an integer argument");
         } else {
@@ -367,7 +381,7 @@ public class Options {
 
     private static void setXLocation(String loc) {
         int chosenXLoc = -1;
-        if (loc.equals("")) {
+        if (loc.isEmpty()) {
             Logger.addLog("Could not set location x because -lx requires an integer argument");
             System.out.println("-lx requires an integer argument");
         } else {
@@ -384,7 +398,7 @@ public class Options {
     }
     private static void setYLocation(String loc) {
         int chosenYLoc = -1;
-        if (loc.equals("")) {
+        if (loc.isEmpty()) {
             Logger.addLog("Could not set location y -ly requires an integer argument");
             System.out.println("-ly requires an integer argument");
         } else {
@@ -401,7 +415,7 @@ public class Options {
     }
     private static void setAlpha(String strAlpha) {
         float chosenAlpha = -1;
-        if (strAlpha.equals("")) {
+        if (strAlpha.isEmpty()) {
             Logger.addLog("Could not set alpha because -a requires a float argument");
             System.out.println("-a requires a float argument");
         } else {
