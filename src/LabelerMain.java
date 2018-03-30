@@ -38,6 +38,7 @@ public class LabelerMain {
         System.out.println("Opened " + Options.inputFile);
         System.out.println("Labeling as " + Options.text);
         mypic.writeLabel();
+
         mypic.write("output/" + inFileName);
 
 //        mypic.write(Options.outputFile);
