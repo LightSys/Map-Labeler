@@ -8,7 +8,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-/*
+/**
 Created by Will Kercher 2/26/18
 The goal of this application is to create a dictionary that takes the image name for a map from the CIA world factbook,
 and to return the country name for that map.
@@ -150,7 +150,7 @@ public class FileNameToCountryName {
         // Declare factbook as the input given for the factbook zip
         ZipFile factbook = new ZipFile(args[0]);
         // Make /maps dir for map .gif's to be extracted to
-        makeDirectory.makeNewDir("maps");
+        MakeDirectory.makeNewDir("maps");
         // Get the maps from the factbook and unzip them to /maps
         unzipMaps(factbook);
         //make csv for XX-map.gif -> country name
@@ -164,7 +164,7 @@ public class FileNameToCountryName {
         System.out.println("TEST CSV BEING RAN");
         //list files in maps/
         System.out.println("Printing Folder maps/ Contents:");
-        ArrayList<String> mapsWithoutNames = new ArrayList<String>();
+        ArrayList<String> mapsWithoutNames = new ArrayList<>();
         final File folder = new File("maps/");
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             mapsWithoutNames.add(fileEntry.getName());
@@ -192,20 +192,24 @@ public class FileNameToCountryName {
                         mapsWithoutNames.remove(fileName);
                     }
                     else{//It Doesn't have a name in the CSV :(
+                        Logger.addLog(fileName + " Has no Name in " + csvName);
                         System.out.println(fileName + " Has no Name in " + csvName);
                     }
                 }
                 else{
                     System.out.println("Was not able to find both FileName and CountryName from line: " + line);
+                    Logger.addLog("Was not able to find both FileName and CountryName from line: " + line);
                 }
             }
             System.out.println("Number of Maps not matched with a name: " + mapsWithoutNames.size());
-            for (String homelessMap : mapsWithoutNames) {
-                System.out.println(homelessMap + " has no home :'(");
+            for (String namelessMap : mapsWithoutNames) {
+                Logger.addLog(namelessMap + " has no name!");
+                System.out.println(namelessMap + " has no name :'(");
             }
         }
         catch (IOException e) {
-            System.out.println("Error looks like File can't be read");
+            Logger.addLog("Error looks like " + csvName + " can't be read");
+            System.out.println("Error looks like " + csvName + " can't be read");
         }
     }
 }

@@ -77,6 +77,7 @@ public class Options {
 
         if (argList.isEmpty()) {
             System.out.println("Labeler requires arguments\nUse the -help flag for more information");
+            Logger.addLog("Labeler requires arguments\nUse the -help flag for more information");
             System.exit(0);
         }
 
@@ -92,6 +93,12 @@ public class Options {
             setFontSize(42);
             setAlpha(".5");
         }
+        if (argsContainsFlag("-factbook")) { //gets overridden by target color
+            targetColor = Options.FB_LAND_COLOR;
+        }
+        if (argsContainsFlag("-center")) { //gets overridden by target color
+            centerLabel = true;
+        }
         if (argsContainsFlag("-b")) {
             setFontBold();
         }
@@ -100,12 +107,6 @@ public class Options {
         }
         if (argsContainsFlag("-n")) {
             newLine = true;
-        }
-        if (argsContainsFlag("-factbook")) { //gets overridden by target color
-            targetColor = Options.FB_LAND_COLOR;
-        }
-        if (argsContainsFlag("-center")) { //gets overridden by target color
-            centerLabel = true;
         }
 
         argList.add(""); // avoid index out of bounds
@@ -273,6 +274,7 @@ public class Options {
         int chosenFontSize = 0;
         if (size.isEmpty()) {
             System.out.println("Could not set font size because -s requires an integer argument");
+            Logger.addLog("Could not set font size because -s requires an integer argument");
         } else {
             try {
                 chosenFontSize = Integer.parseInt(size);

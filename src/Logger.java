@@ -6,7 +6,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.time.ZoneId;
 
-/*
+/**
 Created by Will Kercher 2/29/18
 Purpose: This class is to handle logging process flags, warnings and errors.
  */
@@ -18,7 +18,7 @@ public class Logger {
     }
     //Takes in a string and appends that to the end of the log file!
     public static void addLog(String newLog){
-        makeDirectory.makeNewDir("logs");// make sure there is a logs directory
+        MakeDirectory.makeNewDir("logs");// make sure there is a logs directory
         String logName = "logs/" + java.time.LocalDate.now().toString() + ".log"; // make sure you have a log for that day
         System.out.println(logName);
         //create logfile
@@ -35,7 +35,7 @@ public class Logger {
     }
 
     //Checks if Logfile exists, if it doesn't it makes it.
-    static void createLogFile(String logName){
+    private static void createLogFile(String logName){
         File logFile = new File(logName);
         // if the directory does not exist, create it
         if (!logFile.exists()) {

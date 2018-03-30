@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 Created by Will Kercher 2/29/18
 The goal of this application is to take in the csv file that has the map names and
  */
-public class batchLabeler {
-    public batchLabeler(){}
+public class BatchLabeler {
+    public BatchLabeler(){}
     public static void ProcessCSV(String csvName, String mapsLoc){
         //ReadCSV
         try {
