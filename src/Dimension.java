@@ -12,4 +12,13 @@ public class Dimension {
         this.w = w;
         this.h = h;
     }
+    public boolean fitsInside(int otherW, int otherH){
+        if (this.w >= otherW) return false;
+        if (this.h >= otherH) return false;
+        return true;
+    }
+
+    public boolean fitsInside(Dimension other){
+        return fitsInside(other.w, other.h);
+    }
 }

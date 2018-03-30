@@ -38,11 +38,7 @@ public class Labeler {
         Picture mypic = new Picture(Options.inputFile);
         System.out.println("Opened " + Options.inputFile);
         System.out.println("Labeling as " + Options.text);
-        if (Options.centerLabel){
-            mypic.writeCenteredLabel();
-        } else {
-            mypic.writeLabel();
-        }
+        mypic.writeLabel();
 
         mypic.write("output/" + inFileName);
 

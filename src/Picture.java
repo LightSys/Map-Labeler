@@ -266,45 +266,8 @@ public class Picture
         return scoreBoxes.getBestBoxLocation();
     }
 
-    public boolean writeCenteredLabel() { //no padding
-        Font font = Options.font;
-        String text = Options.text;
-        int heightOffset = font.getSize() - bufferedImage.getGraphics().getFontMetrics(Options.font).getMaxAscent();
-
-        int origH = font.getSize();
-        String[] strings;
-        if (Options.newLine)
-            strings = text.split("\\s\\s+");
-        else
-            strings = new String[] {text};
-        int maxW = 0;
-        String longestStr = "";
-        for (String s : strings){
-            int w = getDisplayWidth(s, font);
-            if (w > maxW){
-                longestStr = s;
-                maxW = w;
-            }
-        }
-        int h = origH * strings.length;
-        int w = getDisplayWidth(longestStr, font);
-        if (w > this.getWidth() || h > this.getHeight()) {
-            //throw new IllegalArgumentException("Label is too wide! Lower padding, font size, or text length.");
-            System.out.println("Label doesn't fit. Shrinking font size...");
-            Options.shrinkFontToFit(this, longestStr, strings.length);
-            font = Options.font;
-            maxW = getDisplayWidth(longestStr, font);
-            origH = font.getSize();
-            h = (origH * strings.length);
-            w = (int) (Options.padXScale * maxW);
-        }
-        font = Options.font;
-
-        for (int i = 0; i < strings.length; i++) {
-            int drawY = (getHeight()/2 - h/2 + origH/2) + (i * origH);
-            drawString(strings[i], font, getWidth()/2, drawY);
-        }
-        return true;
+    public ScorePoint getBestBoxPosition(Dimension d) {
+        return getBestBoxPosition(d.w, d.h);
     }
 
     public boolean writeLabel() {
@@ -313,76 +276,30 @@ public class Picture
         int heightOffset = font.getSize() - bufferedImage.getGraphics().getFontMetrics(Options.font).getMaxAscent();
         System.out.println("HEIGHT OFFSET: " + heightOffset);
 
-        String[] strings;
-        if (Options.newLine)
+        String[] strings = new String[] {text};
+        if (Options.newLine) {
             strings = text.split("\\s\\s+");
-        else
-            strings = new String[] {text};
-        Dimension boxSize = getBoxSize(strings, font);
+        }
+        Dimension boxSize = getBoxSize(strings, font, Options.padXScale, Options.padYScale);
+        if (!boxSize.fitsInside(getWidth(), getHeight())) {
+            System.out.println("Label doesn't fit. Shrinking font size...");
+            // TODO log?
+            Options.shrinkFontSizeToFit(this, strings);
+            font = Options.font;
+            boxSize = getBoxSize(strings, font, Options.padXScale, Options.padYScale);
+        }
 
-        int origW = getDisplayWidth(text, font);
-        int origH = font.getSize();
-        if (!Options.newLine) {
-           int w = (int) (Options.padXScale * origW);
-           int h = (int) (Options.padYScale * origH);
-           if (w > this.getWidth() || (h > this.getHeight())) {
-//               throw new IllegalArgumentException("Label doesn't fit! Lower padding, font size, or text length.");
-               System.out.println("Label doesn't fit. Shrinking font size...");
-               Options.shrinkFontToFit(this, text, 1);
-               font = Options.font;
-               origW = getDisplayWidth(text, font);
-               origH = font.getSize();
-               w = (int) (Options.padXScale * origW);
-               h = (int) (Options.padYScale * origH);
-           }
-           ScorePoint sp = getBestBoxPosition(w, h);
-           int drawX = sp.getP().getX() + w / 2;
-           int drawY = sp.getP().getY() + h / 2;
-           if (Options.debug) {
-               drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
-               System.out.println(sp.getScore());
-           }
-           drawString(text, font, drawX, drawY);
-       } else {
-           String[] splitted = text.split("\\s\\s+"); //split on 2 spaces
-           int[] widths = new int[splitted.length];
-           int maxW = 0;
-           int maxI = 0;
-           for (int i = 0; i < splitted.length; i++) {
-               widths[i] = getDisplayWidth(splitted[i], font);
-               if (maxW < widths[i]) {
-                   maxW = widths[i];
-                   maxI = i;
-               }
-           }
-           int h = (int) (Options.padYScale * origH);
-           int yPadding = h - origH;
-           h = (origH * splitted.length) + yPadding;
-           int w = (int) (Options.padXScale * maxW);
-           if (w > this.getWidth() || h > this.getHeight()) {
-               //throw new IllegalArgumentException("Label is too wide! Lower padding, font size, or text length.");
-               System.out.println("Label doesn't fit. Shrinking font size...");
-               Options.shrinkFontToFit(this, splitted[maxI], splitted.length);
-               font = Options.font;
-               maxW = getDisplayWidth(splitted[maxI], font);
-               origH = font.getSize();
-               h = (int) (Options.padYScale * origH);
-               yPadding = h - origH;
-               h = (origH * splitted.length) + yPadding;
-               w = (int) (Options.padXScale * maxW);
-           }
-           ScorePoint sp = getBestBoxPosition(w, h);
-           if (Options.debug) {
-               drawBox(sp.getP().getX(), sp.getP().getY(), w, h);
-               System.out.println(sp.getScore());
-           }
-           int drawX = sp.getP().getX() + w / 2;
-           int drawTop = sp.getP().getY();
-           for (int i = 0; i < splitted.length; i++) {
-               drawString(splitted[i], font, drawX, yPadding + drawTop + i * origH);
-           }
-       }
-       return true;
+        if (Options.centerLabel){
+            drawCenteredPaddedLabel(strings, font, boxSize, Options.padYScale);
+            return true;
+        }
+        ScorePoint sp = getBestBoxPosition(boxSize);
+        if (Options.debug) {
+            drawBox(sp.getP().getX(), sp.getP().getY(), boxSize.w, boxSize.h);
+            System.out.println(sp.getScore());
+        }
+        drawPaddedLabel(strings, font, sp.getP(), boxSize, Options.padYScale);
+        return true;
    }
 
     private void drawBox(int x, int y, int w, int h) {
@@ -395,7 +312,29 @@ public class Picture
         }
     }
 
-    public Dimension getBoxSize(String[] strings, Font font) {
+    private void drawPaddedLabel(String[] strings, Font font, Point p, Dimension d, double padYScale){
+        int origH = font.getSize();
+        int drawX = p.getX() + d.w / 2;
+        int drawTop = p.getY();
+        int yPadding = (int) ((origH * padYScale) - origH);
+        int drawFirstY = drawTop + yPadding/2 + origH/2;
+        for (int i = 0; i < strings.length; i++) {
+            drawString(strings[i], font, drawX, drawFirstY + i*origH);
+        }
+    }
+
+    private void drawCenteredPaddedLabel(String[] strings, Font font, Dimension d, double padYScale){
+        int origH = font.getSize();
+        int drawX = this.getWidth()/2;
+        int drawTop = this.getHeight()/2 - d.h/2;
+        int yPadding = (int) ((origH * padYScale) - origH);
+        int drawFirstY = drawTop + yPadding/2 + origH/2;
+        for (int i = 0; i < strings.length; i++) {
+            drawString(strings[i], font, drawX, drawFirstY + i*origH);
+        }
+    }
+
+    public Dimension getBoxSize(String[] strings, Font font, double padXScale, double padYScale) {
         int maxW = 0;
         String longestStr = "";
         for (String s : strings){
@@ -405,8 +344,11 @@ public class Picture
                 maxW = w;
             }
         }
-        int w = getDisplayWidth(longestStr, font);
-        int h = font.getSize() * strings.length;
+        int w = (int) (padXScale * getDisplayWidth(longestStr, font));
+        int origH = font.getSize();
+        int yPadding = (int) ((origH * padYScale) - origH);
+        int h = origH * strings.length + yPadding;
+
         return new Dimension(w, h);
     }
 }

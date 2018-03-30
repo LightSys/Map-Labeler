@@ -184,22 +184,26 @@ public class Options {
         font = new Font(font.getName(), font.getStyle(), size);
     }
 
-    public static void shrinkFontToFit(Picture pic, String displayText, int numStrings) {
-        int origW = pic.getDisplayWidth(displayText, font);
-        int origH = font.getSize();
-        int w = (int) (Options.padXScale * origW);
-        int h = (int) (Options.padYScale * origH);
-        int yPadding = h - origH;
-        h = (origH * numStrings) + yPadding;
-        while (w >= pic.getWidth() || (h >= pic.getHeight())){
-            setFontSize(font.getSize()-1);
-            origW = pic.getDisplayWidth(displayText, font);
-            origH = font.getSize();
-            w = (int) (Options.padXScale * origW);
-            h = (int) (Options.padYScale * origH);
-            yPadding = h - origH;
-            h = (origH * numStrings) + yPadding;
+    public static void shrinkFontSizeToFit(Picture pic, String[] strings) {
+        // TODO: Replace this while loop with a binary search
+        Dimension boxSize = pic.getBoxSize(strings, font, padXScale, padYScale);
+        while (!boxSize.fitsInside(pic.getWidth(), pic.getHeight())) {
+            setFontSize(font.getSize() - 1);
+            boxSize = pic.getBoxSize(strings, font, padXScale, padYScale);
         }
+    }
+
+    private static String getLongestString(Picture pic, String[] strings){
+        int maxW = 0;
+        String longestStr = "";
+        for (String s : strings){
+            int w = pic.getDisplayWidth(s, font);
+            if (w > maxW){
+                longestStr = s;
+                maxW = w;
+            }
+        }
+        return longestStr;
     }
 
     public static String getExtension(String fileName) {
