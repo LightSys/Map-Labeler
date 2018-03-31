@@ -9,11 +9,12 @@ public class Picture
     private String fileName;
     private BufferedImage bufferedImage;
     private String extension;
+    private boolean loaded = false;
 
     public Picture(String fileName)
     {
         System.out.println("Trying to open thing");
-        load(fileName);
+        loaded = load(fileName);
     }
 
     public BufferedImage getBufferedImage() { return bufferedImage; }
@@ -271,6 +272,10 @@ public class Picture
     }
 
     public boolean writeLabel() {
+        if (!loaded){
+            throw new IllegalArgumentException(this.fileName +
+                    " could not be opened.");
+        }
         Font font = Options.font;
         String text = Options.text;
         String[] strings = new String[] {text};
