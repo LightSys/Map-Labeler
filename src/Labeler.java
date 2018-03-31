@@ -40,7 +40,8 @@ public class Labeler {
         System.out.println("Opened " + Options.inputFile);
         System.out.println("Labeling as " + Options.text);
         mypic.writeLabel();
-        String outFileName = "output/" + mypic.getFileName();
+        String outFileName = System.getProperty("user.dir") + "/output/" + mypic.getFileName();
+        MakeDirectory.makeNewDir(System.getProperty("user.dir") + "/output/");
         mypic.write(outFileName);
     }
 
