@@ -13,7 +13,6 @@ public class Picture
 
     public Picture(String fileName)
     {
-        System.out.println("Trying to open thing");
         loaded = load(fileName);
     }
 
@@ -96,15 +95,14 @@ public class Picture
      */
     public void loadOrFail(String fileName) throws IOException
     {
-        // set the current picture's file name
-        this.fileName = fileName;
-
         // set the extension
         int posDot = fileName.indexOf('.');
         if (posDot >= 0)
             this.extension = fileName.substring(posDot + 1);
 
-        File file = new File(this.fileName);
+        File file = new File(fileName);
+        // set the current picture's file name
+        this.fileName = file.getName();
 
         if (!file.canRead())
         {
@@ -137,7 +135,7 @@ public class Picture
             System.out.println("There was an error trying to open " + fileName);
             Logger.addLog("There was an error trying to open " + fileName);
             bufferedImage = new BufferedImage(600,200,
-                    BufferedImage.TYPE_INT_RGB);
+                    BufferedImage.TYPE_INT_ARGB);
             addMessage("Couldn't load " + fileName, new Font("Helvetica",Font.BOLD,16),5,100);
             return false;
         }
@@ -152,16 +150,20 @@ public class Picture
      */
     public void addMessage(String message, Font font, int xPos, int yPos)
     {
-        // get a graphics context to use to draw on the buffered image
-        Graphics2D graphics2d = bufferedImage.createGraphics();
+        BufferedImage newImg = new BufferedImage(
+                getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
 
-        graphics2d.setPaint(Options.color);
+        Graphics2D graphics2d = newImg.createGraphics();
+        graphics2d.drawImage(bufferedImage, 0, 0, null);
+
+        graphics2d.setColor(Options.color);
 
         graphics2d.setFont(font);
 
         // draw the message
         graphics2d.drawString(message,xPos,yPos);
 
+        bufferedImage = newImg;
     }
 
     /**
@@ -239,8 +241,8 @@ public class Picture
             this.writeOrFail(fileName);
             return true;
         } catch (Exception ex) {
-            Logger.addLog("There was an error trying to write to" + fileName);
-            System.out.println("There was an error trying to write to" + fileName);
+            Logger.addLog("There was an error trying to write to " + fileName);
+            System.out.println("There was an error trying to write to " + fileName);
             ex.printStackTrace();
             return false;
         }
@@ -283,9 +285,10 @@ public class Picture
             strings = text.split("\\s\\s+");
         }
         Dimension boxSize = getBoxSize(strings, font, Options.padXScale, Options.padYScale);
+        Font prevFont = font;
         if (!boxSize.fitsInside(getWidth(), getHeight())) {
             System.out.println("Label doesn't fit. Shrinking font size...");
-            // TODO log?
+            Logger.addLog("Label doesn't fit " + fileName + ". Shrinking font size...");
             Options.shrinkFontSizeToFit(this, strings);
             font = Options.font;
             boxSize = getBoxSize(strings, font, Options.padXScale, Options.padYScale);
@@ -302,12 +305,28 @@ public class Picture
         }
         boxSize.h -= heightOffset;
         ScorePoint sp = getBestBoxPosition(boxSize);
+
         if (Options.debug) {
             drawBox(sp.getP().getX(), sp.getP().getY(), boxSize.w, boxSize.h);
             System.out.println(sp.getScore());
         }
         sp.getP().translate(0, -heightOffset);
         drawPaddedLabel(strings, font, sp.getP(), boxSize, Options.padYScale);
+        double scorePerPixel = sp.getScore()/boxSize.area();
+        if (Options.targetColor == null){
+            if (scorePerPixel < Options.SCORE_THRESHOLD){
+                System.out.println("Warning: " + getFileName() + " might not be labeled well.");
+                scorePerPixel = -(scorePerPixel - Options.SCORE_THRESHOLD);
+                Logger.addLog("Warning: Label on " + getFileName() + " is noisy. Consider inspecting output file. Severity: " + Math.round(scorePerPixel * 100)/100.0);
+            }
+        } else {
+            if (scorePerPixel < Options.TC_SCORE_THRESHOLD){
+                System.out.println("Warning: " + getFileName() + " might not be labeled well.");
+                scorePerPixel = -(scorePerPixel - Options.TC_SCORE_THRESHOLD);
+                Logger.addLog("Warning: Label on " + getFileName() + " is noisy. Consider inspecting output file. Severity: " + Math.round(scorePerPixel * 100)/100.0);
+            }
+        }
+        Options.font = prevFont;
         return true;
    }
 
@@ -360,4 +379,6 @@ public class Picture
 
         return new Dimension(w, h);
     }
+
+
 }

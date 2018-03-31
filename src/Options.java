@@ -13,13 +13,14 @@ public class Options {
     public enum InfoType {HELP, FONT, EXTENSION}
 
     public static final String[] EXTENSIONS = {".csv", ".gif", ".jpg", ".png", ".bmp"};
+    public static final double SCORE_THRESHOLD = -1.0;
+    public static final double TC_SCORE_THRESHOLD = -15.0;
 
     public static double padXScale = 1.2;
     public static double padYScale = 1.5;
     public static boolean newLine = false;
     public static Font font = new Font("Arial", Font.PLAIN, 14);
-    public static String outputFile = "out.gif";
-    public static String inputFile = "us-map.gif";
+    public static String inputFile = "";
     public static String text = "Sample Label";
     public static String fileExtension = "";
     public static InputType inputType = null;
@@ -27,7 +28,7 @@ public class Options {
     public static String errorMessage = null;
     public static Color color = Color.black;
 
-    public static boolean debug = true;
+    public static boolean debug = false;
 
     public static ArrayList<String> argList;
     public static int locationX = -1;

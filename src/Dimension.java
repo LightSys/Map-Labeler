@@ -17,6 +17,9 @@ public class Dimension {
         if (this.h >= otherH) return false;
         return true;
     }
+    public int area() {
+        return w*h;
+    }
 
     public boolean fitsInside(Dimension other){
         return fitsInside(other.w, other.h);

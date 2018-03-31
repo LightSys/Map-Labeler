@@ -25,12 +25,12 @@ public class Labeler {
                 break;
             case DIRECTORY:
                 System.out.println("Input mode directory");
-                //setup
-                //run many
+                String dirName = "";
+                if (args.length > 0) dirName = args[0];
+                Options.setInputDirectory(dirName);
+                BatchLabeler.ProcessDir(Options.inputDirectory);
                 break;
         }
-        System.out.println(Options.font.getSize());
-        System.out.println(Options.font.getSize2D());
     }
 
     public static void labelPicture(String inFileName, String labelText) {
@@ -40,10 +40,9 @@ public class Labeler {
         System.out.println("Opened " + Options.inputFile);
         System.out.println("Labeling as " + Options.text);
         mypic.writeLabel();
-
-        mypic.write("output/" + inFileName);
-
-//        mypic.write(Options.outputFile);
+        String outFileName = System.getProperty("user.dir") + "/output/" + mypic.getFileName();
+        MakeDirectory.makeNewDir(System.getProperty("user.dir") + "/output/");
+        mypic.write(outFileName);
     }
 
     public static void printInfo() {

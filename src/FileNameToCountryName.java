@@ -18,16 +18,16 @@ public class FileNameToCountryName {
     //fixSplitName(String name) takes a string input, removes comma split, and corrects name
     //ex: "Bahamas, The" -> "The Bahamas" and "Congo, Republic of the" -> "The Republic of the Congo"
     private static String fixSplitName(String name){
-        System.out.println("Comma in country name: " + name);
+        //System.out.println("Comma in country name: " + name);
         String[] parts = name.split(",\\s"); // Array splits name
         String a = parts[1];//switch sides
         String b = parts[0];//switch sides
-        System.out.println("Part a: " + a);
-        System.out.println("Part b: " + b);
-        System.out.println("a+b: " + a + b);
+        //System.out.println("Part a: " + a);
+        //System.out.println("Part b: " + b);
+        //System.out.println("a+b: " + a + b);
         return a + b;
     }
-    private static void createCSV( ZipFile factbook) throws IOException {
+    private static void createCSV( ZipFile factbook, String csvName, String outputFolder) throws IOException {
         ArrayList<String> filenameToCountryName = new ArrayList<>();
         try {
             Enumeration entries = factbook.entries();
@@ -75,16 +75,17 @@ public class FileNameToCountryName {
         catch (IOException e) {
             e.printStackTrace();
         }
-        FileWriter writer = new FileWriter("maps.csv");
+        FileWriter writer = new FileWriter(outputFolder + csvName);
         for(String str: filenameToCountryName) {
             writer.write(str);
         }
         writer.close();
         System.out.println("CSV Created");
     }
-    private static void extractFile(String fileName, String zipPath) throws Exception{
-        // remove all the directory information from name and put it in maps
-        String newFileName = fileName.replaceAll(".*/","maps/");
+    private static void extractFile(String fileName, String zipPath, String outputDir) throws Exception{
+        // remove all the directory information from name and put it in new directory
+        //todo fix
+        String newFileName = fileName.replaceAll(".*/",outputDir);
         //check if file already exists!
         File f = new File(newFileName);
         if(f.exists()){
@@ -111,10 +112,12 @@ public class FileNameToCountryName {
         zin.close();
         System.out.println("Map extracted: " + newFileName);
     }
-    private static void unzipMaps(ZipFile factbook) throws Exception {
-        System.out.println("List of Map Names Entered");
+    private static void unzipMaps(ZipFile factbook, String outputDir) throws Exception {
+        System.out.println("unzipMaps Entered");
         System.out.println("path name: " + factbook.getName());
         System.out.println("size: " + factbook.size());
+        System.out.println("Output Folder: " + outputDir);
+
 
         int numMaps = 0;
         // Reads through each file in the zip
@@ -124,7 +127,7 @@ public class FileNameToCountryName {
             ZipEntry entry = entries.nextElement();
             // Checks if file is a map and add it to the list of maps
             if(entry.getName().contains("-map.gif") && entry.getName().contains("factbook/graphics/maps/")){
-                extractFile(entry.getName(), factbook.getName());
+                extractFile(entry.getName(), factbook.getName(), outputDir);
                 numMaps++;
                 //System.out.println("Num Maps: " + numMaps);
                 long timeSoFar = System.nanoTime();
@@ -138,34 +141,46 @@ public class FileNameToCountryName {
         System.out.println("Number of Map images: " + numMaps);
     }
 
-    public static void main(String[] args) throws Exception {
+    /**
+     * Main takes in two arguments in the form ["factbook1.zip","outputFolder"]
+     * @param args String[]
+     * @throws Exception
+     */
+    public static String[] runProcess(String[] args) throws Exception {
+        String factbookName = args[0];
+        String outputDir = args[1];
+
         //check input line File
         if(args.length == 0){
             System.out.println("No File was given!");
             System.out.println("Please input location of factbook.zip");
-            return;
+            return null;
         }
         // Print Input
-        System.out.println("Input: " + args[0]);
+        System.out.println("Input: " + factbookName);
         // Declare factbook as the input given for the factbook zip
-        ZipFile factbook = new ZipFile(args[0]);
-        // Make /maps dir for map .gif's to be extracted to
-        MakeDirectory.makeNewDir("maps");
+        ZipFile factbook = new ZipFile(factbookName);
+        // Make dir for map unlabeled maps .gif's to be extracted to
+        String unlabeledMapsDir = outputDir + "unlabeled-maps/";
+        MakeDirectory.makeNewDir(unlabeledMapsDir);
         // Get the maps from the factbook and unzip them to /maps
-        unzipMaps(factbook);
+        unzipMaps(factbook, unlabeledMapsDir);
         //make csv for XX-map.gif -> country name
-        createCSV(factbook);
+        String csvName =  "factbookCountryMaps.csv";
+        createCSV(factbook, csvName, outputDir);
         //test CSV with extracted Maps :)
-        String csvName = "maps.csv";
-        testCSV(csvName);
+        testCSV(csvName, unlabeledMapsDir);
+        String[] CSVAndUnlabeledMapsDir = {csvName, unlabeledMapsDir};
+        return CSVAndUnlabeledMapsDir;
     }
 
-    private static void testCSV(String csvName) {
+    private static void testCSV(String csvName, String unlabeledMapsDir) {
         System.out.println("TEST CSV BEING RAN");
         //list files in maps/
-        System.out.println("Printing Folder maps/ Contents:");
+        System.out.println("Printing Folder " + unlabeledMapsDir + " Contents:");
         ArrayList<String> mapsWithoutNames = new ArrayList<>();
-        final File folder = new File("maps/");
+        //go through unlabeled maps and read todo asflasdlfaklsdfl
+        final File folder = new File(unlabeledMapsDir);
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             mapsWithoutNames.add(fileEntry.getName());
             System.out.println(fileEntry.getName());
@@ -187,7 +202,7 @@ public class FileNameToCountryName {
                     String countryName = countryNameMatcher.group(0);
                     //check if map from folder has a map in the CSV
                     if(mapsWithoutNames.contains(fileName)){//It has a name in the CSV :)
-                        System.out.println("There exists a name for: " + fileName + " that name is: " + countryName );
+                        //System.out.println("There exists a name for: " + fileName + " that name is: " + countryName );
                         //remove filename from mapsWithoutNames
                         mapsWithoutNames.remove(fileName);
                     }
