@@ -5,17 +5,11 @@
 public class FactbookAutomaticLabeler {
     FactbookAutomaticLabeler(){}
 
-    static void printInputError(){
-        System.out.println("Input Error");
-        System.out.println("Input should be: file/path/factbook.zip, and an optional output folder name!");
-        System.out.println("If no output folder is given, output will be placed where application is run");
-    }
 
     /**This Java application is designed as an automated process
      * for labeling all the maps in the CIA World Factbook.
      * Output: A CSV with filename of a map and the name of that country.
      *         and a folder with shiny new labeled maps
-     * Example: aa-map.gif,United States of America
      * @param args Commandline input arguments, args[0] should be location of factbook.zip,
      *             and args[1] should be location of output folder
      */
@@ -68,5 +62,11 @@ public class FactbookAutomaticLabeler {
             Logger.addLog("Error with returned string from FileNameToCountryName: ");
             return;
         }
+    }
+
+    static void printInputError(){
+        System.out.println("Input Error");
+        System.out.println("Input should be: file/path/factbook.zip, and an optional output folder name!");
+        System.out.println("If no output folder is given, output will be placed where application is run");
     }
 }

@@ -4,6 +4,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Created by Edric on 3/27/2018.
+ */
+
 public class Picture
 {
     private String fileName;
@@ -157,10 +161,8 @@ public class Picture
         graphics2d.drawImage(bufferedImage, 0, 0, null);
 
         graphics2d.setColor(Options.color);
-
         graphics2d.setFont(font);
 
-        // draw the message
         graphics2d.drawString(message,xPos,yPos);
 
         bufferedImage = newImg;
@@ -269,11 +271,18 @@ public class Picture
         return scoreBoxes.getBestBoxLocation();
     }
 
+    /**
+     * Method to return the top left corner of the label position
+     * @return a ScorePoint with top left corner of the label position and the score
+     */
     public ScorePoint getBestBoxPosition(Dimension d) {
         return getBestBoxPosition(d.w, d.h);
     }
 
-    public boolean writeLabel() {
+    /**
+     * Method to put the label on an image.  Uses the values in the options class.
+     */
+    public void writeLabel() {
         if (!loaded){
             throw new IllegalArgumentException(this.fileName +
                     " could not be opened.");
@@ -301,13 +310,13 @@ public class Picture
         }
         if (Options.centerLabel) {
             drawCenteredPaddedLabel(strings, font, boxSize, Options.padYScale);
-            return true;
+            return;
         }
         boxSize.h -= heightOffset;
         ScorePoint sp = getBestBoxPosition(boxSize);
 
         if (Options.debug) {
-            drawBox(sp.getP().getX(), sp.getP().getY(), boxSize.w, boxSize.h);
+            drawRectangle(sp.getP().getX(), sp.getP().getY(), boxSize.w, boxSize.h);
             System.out.println(sp.getScore());
         }
         sp.getP().translate(0, -heightOffset);
@@ -327,17 +336,22 @@ public class Picture
             }
         }
         Options.font = prevFont;
-        return true;
+        return;
    }
 
-    private void drawBox(int x, int y, int w, int h) {
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                getPixel(x+i,y+j).setBlue(0);
-                getPixel(x+i,y+j).setRed(255);
-                getPixel(x+i,y+j).setGreen(0);
-            }
-        }
+
+    private void drawRectangle(int x, int y, int w, int h) {
+        BufferedImage newImg = new BufferedImage(
+                getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D graphics2d = newImg.createGraphics();
+        graphics2d.drawImage(bufferedImage, 0, 0, null);
+
+        graphics2d.setColor(new Color(0,0,0,70));
+
+        graphics2d.fillRect(x,y,w,h);
+
+        bufferedImage = newImg;
     }
 
     private void drawPaddedLabel(String[] strings, Font font, Point p, Dimension d, double padYScale){

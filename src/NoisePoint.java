@@ -5,7 +5,6 @@ import java.awt.Color;
 
 public class NoisePoint extends ScorePoint {
 
-    //check 4 cardinal directions
     public NoisePoint(Point p, Picture pic){
         super(p);
         this.setScore(calculateScore(p, pic));
@@ -19,6 +18,15 @@ public class NoisePoint extends ScorePoint {
         super(new Point(x, y), noise);
     }
 
+    /**
+     * Method to assign a score to a pixel based on the difference from it to the pixels around it
+     * All scores are less than 0 with higher scores being better
+     * If the Target color option is set, will also subtract from the score if the pixel is far from the target color
+     *
+     * @param p Location of te pixel to score
+     * @param pic picture that the pixel exists in
+     * @return a noise score for the given pixel
+     */
     public static double calculateScore(Point p, Picture pic) {
         int pw = pic.getWidth();
         int ph = pic.getHeight();
@@ -56,7 +64,6 @@ public class NoisePoint extends ScorePoint {
     }
 
     public static double distToTarget(Color myColor, Color targetColor) {
-        double dist = Math.abs(Pixel.colorDistance(myColor, targetColor));
-        return dist;
+        return Math.abs(Pixel.colorDistance(myColor, targetColor));
     }
 }

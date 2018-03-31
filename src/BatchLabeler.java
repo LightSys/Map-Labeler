@@ -6,11 +6,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /*
-Created by Will Kercher 2/29/18
-The goal of this application is to take in the csv file that has the map names and
+ * Created by Will Kercher on 2/29/18.
  */
+
 public class BatchLabeler {
     public BatchLabeler(){}
+
+    /**
+     * Method to process a CSV formatted <image.xxx><label> and label the images
+     * @param mapsLoc directory that contains the image files that you want to label
+     */
     public static void ProcessCSV(String csvName, String mapsLoc){
         //ReadCSV
         try {
@@ -45,15 +50,18 @@ public class BatchLabeler {
         }
     }
 
-    public static void ProcessDir(String mapsLoc){
-        File dir = new File(mapsLoc);
+    /**
+     * Method to process a directory containing image files and label the images with their names
+     */
+    public static void ProcessDir(String directory){
+        File dir = new File(directory);
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
             for (File child : directoryListing) {
                 String fileName = child.getName();
                 try {
                     String fileNameWithOutExt = fileName.replaceFirst("[.][^.]+$", "");
-                    Labeler.labelPicture(mapsLoc + fileName, fileNameWithOutExt);
+                    Labeler.labelPicture(directory + fileName, fileNameWithOutExt);
                 }
                 catch(IllegalArgumentException e){
                     e.printStackTrace();
@@ -61,7 +69,7 @@ public class BatchLabeler {
                 }
             }
         } else {
-            String message = "Could not open dir " + mapsLoc;
+            String message = "Could not open dir " + directory;
             System.out.println(message);
             Logger.addLog(message);
         }

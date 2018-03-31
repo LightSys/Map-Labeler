@@ -33,6 +33,9 @@ public class Labeler {
         }
     }
 
+    /**
+     * Method to label a picture.  Outputs the labeled picture into a folder called output in the working directory
+     */
     public static void labelPicture(String inFileName, String labelText) {
         Options.inputFile = inFileName;
         Options.text = labelText;

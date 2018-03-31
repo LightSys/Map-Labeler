@@ -1,6 +1,12 @@
 /**
  * Created by Edric on 3/27/2018.
  */
+
+/**
+ * Score boxes is a collection of noise points that is used to determine the sum of noise in an area
+ * This should be used to determine which area is the best to place a label
+ */
+
 public class ScoreBoxes {
     NoisePoint[][] nPixels;
     Double[][] boxNoise;
@@ -36,6 +42,11 @@ public class ScoreBoxes {
         this.center = p;
     }
 
+    /**
+     * Method to calculate which area in the picture will best hold the label
+     * If target locations have been input, will not consider boxes that do not contain those coordinates
+     * @return a score point at the top left corner of the best box
+     */
     public ScorePoint getBestBoxLocation() {
         Double best = null;
         Point loc = null;
@@ -64,7 +75,11 @@ public class ScoreBoxes {
         return new ScorePoint(loc, best);
     }
 
-    //higher scores are better
+    /**
+     * Method to get the score for a certain box
+     * Takes in the x and y coordinates of the top left corner of the box to score
+     * @return a score for the box
+     */
     private double getBoxScore(int x, int y) {
         double score = 0.0;
         score += getScoreForNoise(x, y);
@@ -72,10 +87,23 @@ public class ScoreBoxes {
         return score;
     }
 
+    /**
+     * Method to get the score for a certain box
+     * Takes in the point at the top left corner of the box to score
+     * @return a score for the box
+     */
     public double getBoxScore(Point p) {
         return getBoxScore(p.getX(), p.getY());
     }
 
+
+    /**
+     * Method to calculate how noisy a certain box is
+     * If no adjacent boxes have had their noise caluclated, will calculate the noise by adding the noise for each pixel in the box
+     * Otherwise, will calculate the noise by subtracting the noise for each pixel that is in the adjacent box but not in this one, and adding the noise for each pixel that is in this box but not in the other
+     * Takes in the x and y coordinates of the top left point of the box
+     * @return a value that is less than 0 that represents how noisy the box is
+     */
     private double getScoreForNoise(int x, int y) {
         double noise = 0.0;
         if (boxNoise[y][x] != null) {
@@ -110,6 +138,13 @@ public class ScoreBoxes {
         return -noise;
     }
 
+    /**
+     * Method to calculate the noise for a set of pixels in a column
+     * @param x x-coordinate of the top pixel in the column
+     * @param y y-coordinate of the top pixel in the column
+     * @param h number of pixels in the column
+     * @return the sum of the noise of the pixels in the column
+     */
     private double getVerticalScore(int x, int y, int h) {
         double score = 0.0;
         for (int i = y; i < y+h; i++) {
@@ -118,6 +153,13 @@ public class ScoreBoxes {
         return score;
     }
 
+    /**
+     * Method to calculate the noise for a set of pixels in a row
+     * @param x x-coordinate of the left-most pixel in the row
+     * @param y y-coordinate of the left-most pixel in the row
+     * @param w number of pixels in the row
+     * @return the sum of the noise of the pixels in the row
+     */
     private double getHorizontalScore(int x, int y, int w) {
         double score = 0.0;
         for (int i = x; i < x+w; i++) {

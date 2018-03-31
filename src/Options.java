@@ -28,7 +28,7 @@ public class Options {
     public static String errorMessage = null;
     public static Color color = Color.black;
 
-    public static boolean debug = false;
+    public static boolean debug = true;
 
     public static ArrayList<String> argList;
     public static int locationX = -1;
@@ -47,6 +47,10 @@ public class Options {
         throw new InstantiationException("Cannot create instance of Options!");
     }
 
+    /**
+     * Method to set the input type based on an extension
+     * @param extension of a file
+     */
     public static void setInputType(String extension) {
         switch (extension) {
             case "directory":
@@ -212,19 +216,6 @@ public class Options {
         }
     }
 
-    private static String getLongestString(Picture pic, String[] strings){
-        int maxW = 0;
-        String longestStr = "";
-        for (String s : strings){
-            int w = pic.getDisplayWidth(s, font);
-            if (w > maxW){
-                longestStr = s;
-                maxW = w;
-            }
-        }
-        return longestStr;
-    }
-
     public static String getExtension(String fileName) {
         int i = fileName.lastIndexOf('.');
         if (i > 0) {
@@ -378,13 +369,16 @@ public class Options {
                 final Field f = Color.class.getField(value);
 
                 return (Color) f.get(null);
-            } catch (Exception ce) {
-                // if we can't get any color return black
+            } catch (Exception e) {
                 return null;
             }
         }
     }
 
+    /**
+     * Method to set an x coordinate to target in the picture
+     * @param loc an x coordinate to target
+     */
     private static void setXLocation(String loc) {
         int chosenXLoc = -1;
         if (loc.isEmpty()) {
@@ -402,6 +396,11 @@ public class Options {
             locationX = chosenXLoc;
         }
     }
+
+    /**
+     * Method to set an y coordinate to target in the picture
+     * @param loc an y coordinate to target
+     */
     private static void setYLocation(String loc) {
         int chosenYLoc = -1;
         if (loc.isEmpty()) {

@@ -12,43 +12,50 @@ Purpose: This class is to handle logging process flags, warnings and errors.
  */
 public class Logger {
 
-    Logger(){    }
-    public static void main(String[] args){
-        addLog("Test LOG OINK!!!!");
+    Logger() throws InstantiationException {
+        throw new InstantiationException("Cannot create instance of Logger!");
     }
-    //Takes in a string and appends that to the end of the log file!
+
+
+    /**
+     * Method to append a string to the end of the log file
+     * If nothing has been logged today will create a new file named <today's date(yyyy-mm-ddd)>.log
+     */
+
     public static void addLog(String newLog){
         MakeDirectory.makeNewDir("logs");// make sure there is a logs directory
-        String logName = "logs/" + java.time.LocalDate.now().toString() + ".log"; // make sure you have a log for that day
-        System.out.println(logName);
-        //create logfile
-        createLogFile(logName);
+        String logName = "logs/" + java.time.LocalDate.now().toString() + ".log";
+        createFile(logName);
         //format line to be added to log "time logMessage \n"
         newLog = Instant.now().atZone(ZoneId.of("GMT")) + "  " + newLog + "\n";
         try {
             Files.write(Paths.get(logName), newLog.getBytes(), StandardOpenOption.APPEND);
         }
         catch (IOException e) {
-            //exception handling left as an exercise for the reader
+            System.out.println("Warning: Failed to write to log file");
         }
 
     }
 
-    //Checks if Logfile exists, if it doesn't it makes it.
-    private static void createLogFile(String logName){
-        File logFile = new File(logName);
+    /**
+     * Method to make file if it doesn't exist
+     */
+    private static void createFile(String fileName){
+        File file = new File(fileName);
         // if the directory does not exist, create it
-        if (!logFile.exists()) {
-            System.out.println("creating log: " + logFile.getName());
+        if (!file.exists()) {
+            System.out.println("creating file: " + file.getName());
             boolean result = false;
             try{
-                result = logFile.createNewFile();
+                result = file.createNewFile();
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
-            if(result) {
-                //System.out.println("Log created: " + logName);
+            if(!result) {
+                System.out.println("Failed to create file: " + file.getName());
+            } else {
+                System.out.println("File created");
             }
         }
     }

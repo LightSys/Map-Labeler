@@ -11,8 +11,8 @@ import java.awt.Color;
  * values in the picture.  A pixel also knows how to get
  * and set the color using a Color object.
  *
- * @author Barb Ericson ericson@cc.gatech.edu
  */
+
 public class Pixel
 {
 
@@ -337,15 +337,6 @@ public class Pixel
         return distance;
     }
 
-    /**
-     * Method to get the average of the colors of this pixel
-     * @return the average of the red, green, and blue values
-     */
-    public double getAverage()
-    {
-        double average = (getRed() + getGreen() + getBlue()) / 3.0;
-        return average;
-    }
 
     /**
      * Method to return a string with information about this pixel
