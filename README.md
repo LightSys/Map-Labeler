@@ -109,7 +109,7 @@ java Labeler usa-map.gif "United States  of  America" -n
 
 ### ```-f <font-name>```
 If this flag is present, the label(s) will be written in the specified font.  
-To get a list of acceptable fonts, use the ```-fonts``` option.  
+To get a list of acceptable fonts, use the ```-font``` option.  
 The default font is Times New Roman.
 ```
 java Labeler aruba-map.gif Aruba -f Arial
@@ -189,10 +189,10 @@ java Labeler aruba-map.gif Aruba -tc 0x00ffff
 The following flags should be used without any other arguments.  
 The program will display information, and leave files unchanged.
 
-### ```-fonts```
+### ```-font```
 Get a listing of available fonts that your system can use.
 ```
-java Labeler -fonts
+java Labeler -font
 ```
 
 ### ```-help```
